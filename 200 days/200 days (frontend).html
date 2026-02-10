@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vũ Trụ Tình Yêu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- 1. CẤU HÌNH CƠ BẢN --- */
+        body {
+            margin: 0; overflow: hidden;
+            background: radial-gradient(circle at center, #1a0520 0%, #000000 100%);
+            font-family: 'Share Tech Mono', monospace; color: #fff;
+            width: 100vw; height: 100vh; cursor: pointer;
+        }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        /* --- 2. GIAO DIỆN UI --- */
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            pointer-events: none;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); padding: 2.5rem; border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.2); max-width: 90%; position: relative;
+            opacity: 0; transform: translateY(50px); pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .glass-panel.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        .hide-ui-btn {
+            position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: rgba(255,255,255,0.5);
+            cursor: pointer; transition: 0.3s; z-index: 20; font-family: sans-serif;
+        }
+        .hide-ui-btn:hover { color: #ff69b4; transform: rotate(90deg); }
+
+        h1 { font-size: 3.5rem; margin: 0; color: #ff69b4; text-shadow: 0 0 20px #ff69b4; }
+        .couple-names {
+            font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #ffb6c1;
+            text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493; margin-bottom: -10px;
+            animation: glowPulse 3s infinite alternate;
+        }
+        @keyframes glowPulse { from { text-shadow: 0 0 15px #ff69b4; } to { text-shadow: 0 0 50px #ff1493; } }
+
+        #timer { font-size: 1.5rem; margin: 15px 0; color: #a8e6cf; }
+        #typewriter { font-size: 1.1rem; color: #fff; min-height: 1.5em; margin-top: 10px; }
+        .cursor { animation: blink 1s infinite; } @keyframes blink { 50% { opacity: 0; } }
+
+        /* BUTTONS */
+        button { font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: 0.3s; pointer-events: auto; outline: none; }
+
+        .action-bar {
+            position: fixed; bottom: 30px; width: 100%;
+            display: flex; justify-content: center; gap: 20px; z-index: 20;
+            pointer-events: none; /* Để click xuyên qua vùng trống */
+        }
+        .action-btn {
+            background: rgba(0,0,0,0.5); border: 1px solid #ff69b4; color: #ff69b4;
+            padding: 10px 20px; border-radius: 30px; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .action-btn:hover { background: #ff69b4; color: black; box-shadow: 0 0 15px #ff69b4; }
+
+        .gallery-btn {
+            margin-top: 25px; padding: 12px 30px;
+            background: rgba(168, 230, 207, 0.1); border: 1px solid #a8e6cf; color: #a8e6cf;
+            font-size: 1.1rem; border-radius: 30px; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .gallery-btn:hover { background: #a8e6cf; color: #000; box-shadow: 0 0 20px #a8e6cf; }
+
+        /* --- 3. GALLERY & LIGHTBOX --- */
+        #gallery-overlay, #mailbox-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(20, 5, 20, 0.95); backdrop-filter: blur(15px); z-index: 100;
+            display: none; flex-direction: column; align-items: center; padding: 20px;
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px; width: 100%; max-width: 1200px; overflow-y: auto; padding: 20px;
+        }
+        .photo-card {
+            background: white; padding: 10px 10px 40px 10px; border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: all 0.4s ease; cursor: zoom-in;
+        }
+        .photo-card:hover { transform: scale(1.1) rotate(2deg); z-index: 10; }
+        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
+        .overlay-header { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff9a9e; margin: 20px 0; }
+        .close-btn { position: absolute; top: 20px; right: 40px; font-size: 3rem; color: #ff9a9e; cursor: pointer; }
+
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 200; display: none;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
+        }
+        #lightbox img { max-width: 90%; max-height: 90%; border: 5px solid #fff; border-radius: 10px; }
+        #lightbox.active img { transform: scale(1); }
+
+        /* --- 4. TÍNH NĂNG MỚI: HỘP THƯ (MAILBOX) --- */
+        .mailbox-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1000px; padding: 20px;
+        }
+        .mail-item {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px; border-radius: 15px; width: 200px; text-align: center;
+            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .mail-item:hover { transform: translateY(-10px); background: rgba(255, 105, 180, 0.2); border-color: #ff69b4; }
+        .mail-icon { font-size: 3rem; color: #ffb6c1; margin-bottom: 10px; }
+        .mail-title { font-size: 1.2rem; color: #fff; }
+        .mail-content {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ff69b4; color: #000; display: flex; justify-content: center; align-items: center;
+            padding: 10px; box-sizing: border-box; font-weight: bold;
+            opacity: 0; transition: 0.3s; font-family: sans-serif;
+        }
+        .mail-item.opened .mail-content { opacity: 1; }
+
+        /* --- 5. TÍNH NĂNG MỚI: SAO BĂNG (SHOOTING STARS) --- */
+        .shooting-star {
+            position: absolute; height: 2px; background: linear-gradient(-45deg, rgba(255,255,255,1), rgba(0,0,255,0));
+            border-radius: 999px; filter: drop-shadow(0 0 6px rgba(105,155,255,1)); z-index: 2; pointer-events: none;
+            animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite;
+        }
+        .shooting-star::before, .shooting-star::after {
+            content: ''; position: absolute; top: calc(50% - 1px); right: 0; height: 2px;
+            background: linear-gradient(-45deg, rgba(0,0,255,0), rgba(255,255,255,1), rgba(0,0,255,0));
+            border-radius: 100%; animation: shining 3s ease-in-out infinite;
+        }
+        .shooting-star::after { transform: translateX(50%) rotateZ(-45deg); }
+        .shooting-star::before { transform: translateX(50%) rotateZ(45deg); }
+
+        @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
+        @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(300px); } }
+        @keyframes shining { 0% { width: 0; } 50% { width: 30px; } 100% { width: 0; } }
+
+        /* --- 6. TÍNH NĂNG MỚI: MOUSE TRAIL --- */
+        .heart-trail {
+            position: absolute; width: 10px; height: 10px; background: #ff69b4;
+            transform: rotate(45deg); pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px #ff69b4;
+            animation: fadeOut 1s linear forwards;
+        }
+        .heart-trail::before, .heart-trail::after {
+            content: ''; position: absolute; width: 10px; height: 10px; background: #ff69b4; border-radius: 50%;
+        }
+        .heart-trail::before { top: -5px; left: 0; }
+        .heart-trail::after { top: 0; left: -5px; }
+        @keyframes fadeOut { 0% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(45deg); } }
+
+    </style>
+</head>
+
+<body onclick="toggleUIPanel(true)">
+
+    <div id="ui-layer">
+        <div class="glass-panel" id="main-panel">
+            <span class="hide-ui-btn" onclick="toggleUIPanel(false); event.stopPropagation();">&times;</span>
+            <div class="couple-names">Quang Anh & Pé Nhi</div>
+            <h1>200 DAYS</h1>
+            <div id="timer">Calculating...</div>
+            <div id="typewriter"></div>
+            <button class="gallery-btn" onclick="openGallery(); event.stopPropagation();">Xem Kho Kỷ Niệm</button>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div class="action-bar">
+        <button class="action-btn" id="music-btn" onclick="toggleMusic(); event.stopPropagation();">
+            <i class="fas fa-play"></i> PLAY MUSIC
+        </button>
+        <button class="action-btn" onclick="openMailbox(); event.stopPropagation();">
+            <i class="fas fa-envelope-open-text"></i> HỘP THƯ
+        </button>
+    </div>
+
+    <div id="gallery-overlay">
+        <div class="overlay-header">✨ Our Sweet Memories ✨</div>
+        <span class="close-btn" onclick="closeOverlay('gallery-overlay')">&times;</span>
+        <div class="gallery-grid">
+            {% if images %}
+                {% for img in images %}
+                <div class="photo-card">
+                    <img src="{{ url_for('static', filename='love_images/' + img) }}" loading="lazy" onclick="zoomImage(this.src); event.stopPropagation();">
+                </div>
+                {% endfor %}
+            {% else %}
+                <h3 style="color: #ccc;">(Demo: Chưa có ảnh trong folder)</h3>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="mailbox-overlay">
+        <div class="overlay-header">💌 Open When... 💌</div>
+        <span class="close-btn" onclick="closeOverlay('mailbox-overlay')">&times;</span>
+        <div class="mailbox-grid">
+            <div class="mail-item" onclick="toggleMail(this)">
+                <div class="mail-icon"><i class="fas fa-heart-broken"></i></div>
+                <div class="mail-title">Khi pé buồn</div>
+                <div class="mail-content">Anh luôn ở đây mà, ôm anh đi! ❤️</div>
+            </div>
+            <div class="mail-item" onclick="toggleMail(this)">
+                <div class="mail-icon"><i class="fas fa-grin-hearts"></i></div>
+                <div class="mail-title">Khi pé nhớ anh</div>
+                <div class="mail-content">Anh cũng nhớ pé x3000 lần! 🚀</div>
+            </div>
+            <div class="mail-item" onclick="toggleMail(this)">
+                <div class="mail-icon"><i class="fas fa-angry"></i></div>
+                <div class="mail-title">Khi mình giận nhau</div>
+                <div class="mail-content">Anh xin lỗi, mình đi ăn gì nhé? 🥺</div>
+            </div>
+            <div class="mail-item" onclick="toggleMail(this)">
+                <div class="mail-icon"><i class="fas fa-bed"></i></div>
+                <div class="mail-title">Khi pé khó ngủ</div>
+                <div class="mail-content">Nhắm mắt lại và mơ về anh nha 🌙</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="">
+    </div>
+
+    <audio id="bg-music" loop crossorigin="anonymous">
+        <source src="{{ url_for('static', filename='love_song.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // --- 1. CONFIG & UTILS ---
+        const startDate = new Date(2025, 6, 26); // Tháng 7 là 6
+
+        function toggleUIPanel(show) {
+            const panel = document.getElementById('main-panel');
+            if (show) panel.classList.add('visible');
+            else panel.classList.remove('visible');
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            const el = document.getElementById('timer');
+            if(el) el.innerText = `${days} Days : ${hours} Hours : ${minutes} Mins : ${seconds} Secs`;
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
+        const message = "Hello my love! Chào mừng pé đến với vũ trụ tình iu của chúng ta...";
+        const typeTarget = document.getElementById('typewriter');
+        let i = 0;
+        function typeWriter() {
+            if (typeTarget && i < message.length) {
+                typeTarget.innerHTML += message.charAt(i); i++; setTimeout(typeWriter, 100);
+            } else if (typeTarget) {
+                typeTarget.innerHTML += '<span class="cursor">_</span>';
+            }
+        }
+        setTimeout(typeWriter, 1000);
+
+        // --- 2. AUDIO VISUALIZER SETUP ---
+        let audioContext, analyser, dataArray, source;
+        let isAudioSetup = false;
+        let beatStrength = 0; // Biến dùng để truyền độ mạnh của nhạc vào 3D
+
+        function setupAudio() {
+            if (isAudioSetup) return;
+            const audio = document.getElementById('bg-music');
+
+            // Tạo AudioContext
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaElementSource(audio);
+
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            isAudioSetup = true;
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bg-music');
+            const btn = document.getElementById('music-btn');
+
+            if (!isAudioSetup) setupAudio(); // Khởi tạo lần đầu click
+            if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+
+            if (audio.paused) {
+                audio.play();
+                btn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
+            } else {
+                audio.pause();
+                btn.innerHTML = '<i class="fas fa-play"></i> PLAY MUSIC';
+            }
+        }
+
+        // --- 3. OVERLAYS & GALLERY ---
+        function openGallery() {
+            const over = document.getElementById('gallery-overlay');
+            over.style.display = 'flex'; setTimeout(() => over.style.opacity = '1', 10);
+        }
+        function openMailbox() {
+            const over = document.getElementById('mailbox-overlay');
+            over.style.display = 'flex'; setTimeout(() => over.style.opacity = '1', 10);
+        }
+        function closeOverlay(id) {
+            const over = document.getElementById(id);
+            over.style.opacity = '0'; setTimeout(() => over.style.display = 'none', 500);
+        }
+        function toggleMail(el) {
+            el.classList.toggle('opened');
+        }
+        function zoomImage(src) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = src;
+            lb.style.display = 'flex'; setTimeout(() => { lb.style.opacity = '1'; lb.classList.add('active'); }, 10);
+        }
+        function closeLightbox() {
+            const lb = document.getElementById('lightbox');
+            lb.style.opacity = '0'; lb.classList.remove('active'); setTimeout(() => lb.style.display = 'none', 300);
+        }
+
+        // --- 4. MOUSE TRAIL EFFECT ---
+        document.addEventListener('mousemove', function(e) {
+            // Chỉ tạo hạt nếu không hover lên UI để đỡ rối
+            if (e.target.closest('.glass-panel') || e.target.closest('.action-bar')) return;
+
+            const heart = document.createElement('div');
+            heart.className = 'heart-trail';
+            heart.style.left = e.pageX + 'px';
+            heart.style.top = e.pageY + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        });
+
+        // --- 5. SHOOTING STARS ---
+        function createShootingStars() {
+            setInterval(() => {
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                star.style.top = Math.random() * (window.innerHeight / 2) + 'px';
+                star.style.transform = `rotate(${Math.random() * 45 - 22.5}deg)`;
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 3000);
+            }, 2500);
+        }
+        createShootingStars();
+
+        // --- 6. THREE.JS 3D HEART ---
+        let scene, camera, renderer, heartCloud, stars, auraCloud;
+        let mouseX = 0, mouseY = 0; let windowHalfX = window.innerWidth/2; let windowHalfY = window.innerHeight/2;
+
+        initThree(); animate();
+
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            if(!container) return;
+            scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x1a0520, 0.002);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 2000);
+            camera.position.z = 400;
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            createVolumetricHeart();
+            createStarfield();
+            createAura();
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX - windowHalfX) * 0.05; mouseY = (e.clientY - windowHalfY) * 0.05;
+            }, false);
+            window.addEventListener('resize', () => {
+                windowHalfX = window.innerWidth/2; windowHalfY = window.innerHeight/2;
+                camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }, false);
+        }
+
+        function createVolumetricHeart() {
+            const particles = 25000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particles * 3);
+            const colors = new Float32Array(particles * 3);
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particles; i++) {
+                const u = Math.random() * Math.PI * 2;
+                const v = Math.random() * Math.PI;
+                const x = 16 * Math.pow(Math.sin(u), 3) * Math.sin(v);
+                const y = (13 * Math.cos(u) - 5 * Math.cos(2*u) - 2 * Math.cos(3*u) - Math.cos(4*u)) * Math.sin(v);
+                const z = 6 * Math.cos(v);
+                const scale = 11;
+                positions[i*3] = x * scale + (Math.random()-0.5)*0.6;
+                positions[i*3+1] = y * scale + (Math.random()-0.5)*0.6;
+                positions[i*3+2] = z * scale + (Math.random()-0.5)*0.6;
+
+                const normalizedZ = (z * scale + 100) / 200;
+                if (Math.random() > 0.1) color.setHSL(0.88 + normalizedZ * 0.05, 0.9, 0.6 + normalizedZ * 0.2);
+                else color.setHSL(0.9, 1.0, 0.95);
+                colors[i*3] = color.r; colors[i*3+1] = color.g; colors[i*3+2] = color.b;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            heartCloud = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 2.5, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.9, sizeAttenuation: true }));
+            scene.add(heartCloud);
+        }
+
+        function createAura() {
+            const particles = 1500;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particles * 3);
+            const colors = new Float32Array(particles * 3);
+            const color = new THREE.Color();
+            for (let i = 0; i < particles; i++) {
+                const r = 250 + Math.random() * 200;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i*3+2] = r * Math.cos(phi);
+                color.setHSL(0.9, 0.8, 0.8);
+                colors[i*3] = color.r; colors[i*3+1] = color.g; colors[i*3+2] = color.b;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            auraCloud = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 1.5, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.5 }));
+            scene.add(auraCloud);
+        }
+
+        function createStarfield() {
+            const geometry = new THREE.BufferGeometry(); const positions = new Float32Array(4000 * 3);
+            for(let i=0; i<4000; i++) {
+                positions[i*3] = (Math.random()-0.5)*2000; positions[i*3+1] = (Math.random()-0.5)*2000; positions[i*3+2] = (Math.random()-0.5)*2000 - 500;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            stars = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 1.2, color: 0xffd1dc, transparent: true, opacity: 0.6 }));
+            scene.add(stars);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // --- AUDIO VISUALIZER LOGIC ---
+            let scaleBeat = 1;
+            if (isAudioSetup && analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                // Lấy trung bình dải Bass (tần số thấp) để làm nhịp đập
+                let sum = 0;
+                for(let i = 0; i < 10; i++) sum += dataArray[i];
+                let avg = sum / 10;
+                // Scale từ 1.0 đến khoảng 1.3 tùy độ mạnh nhạc
+                scaleBeat = 1 + (avg / 256) * 0.3;
+            } else {
+                // Nhịp đập mặc định khi chưa bật nhạc
+                scaleBeat = 1 + Math.sin(Date.now()*0.001 * 2.5)*0.05;
+            }
+
+            if(heartCloud) {
+                camera.position.x += (mouseX - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+
+                heartCloud.rotation.y += 0.005;
+                // Áp dụng scaleBeat từ nhạc hoặc mặc định
+                heartCloud.scale.set(scaleBeat, scaleBeat, scaleBeat);
+            }
+
+            if(auraCloud) {
+                auraCloud.rotation.y -= 0.002;
+                auraCloud.rotation.z += 0.001;
+                // Aura cũng đập nhẹ theo nhạc nhưng trễ hơn xíu
+                auraCloud.scale.set(scaleBeat * 1.1, scaleBeat * 1.1, scaleBeat * 1.1);
+            }
+            if(stars) stars.rotation.z += 0.0005;
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
