@@ -5,3 +5,7 @@ __pycache__/
 node_modules/
 .scratch/
 output/
+instance/
+.env
+.env.*
+!.env.example

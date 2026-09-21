@@ -25,19 +25,21 @@ async function open(browser, options = {}, failAudio = false) {
     try {
         for (const mobile of [false, true]) {
             const { page, errors } = await open(browser, {
-                viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 800 }
+                viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 800 },hasTouch:mobile,isMobile:mobile
             });
             await page.waitForFunction(() => document.getElementById('intro-music').readyState >= 2);
             assert.equal(await page.locator('#intro-music').evaluate(audio => audio.paused), true);
             await page.waitForTimeout(1800);
-            await page.locator('#intro-sound-btn').click();
+            if(mobile)await page.touchscreen.tap(195,300);else await page.mouse.click(640,300);
             await page.waitForFunction(() => !window.testIntroAudio.paused && document.getElementById('intro-sound-btn').getAttribute('aria-pressed') === 'true');
             const lag = await page.evaluate(() => Math.abs(window.testIntroAudio.currentTime - (performance.now()-window.testIntroStart)/1000));
             assert.ok(lag < .5, `Late activation must follow flight clock, lag=${lag}`);
             assert.equal(await page.locator('#intro-sound-btn').getAttribute('aria-pressed'), 'true');
             await page.locator('#intro-sound-btn').click();
             assert.equal(await page.evaluate(() => window.testIntroAudio.paused), true);
+            if(mobile)await page.touchscreen.tap(195,300);else await page.mouse.click(640,300);
             await page.waitForTimeout(500);
+            assert.equal(await page.evaluate(() => window.testIntroAudio.paused), true,'A scene tap must respect explicit mute');
             await page.locator('#intro-sound-btn').click();
             await page.waitForFunction(() => !window.testIntroAudio.paused && document.getElementById('intro-sound-btn').getAttribute('aria-pressed') === 'true');
             if (!mobile) await page.locator('#intro-skip-btn').click();

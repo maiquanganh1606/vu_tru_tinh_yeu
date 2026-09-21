@@ -27,7 +27,8 @@
             label(true);
         } catch (error) {
             if (current !== request || closed) return;
-            wantsSound = false;
+            // Browser blocking is not a user mute; keep the default sound intent.
+            if (error.name !== 'NotAllowedError') wantsSound = false;
             label(false, error.name !== 'NotAllowedError');
         }
     }
@@ -39,10 +40,18 @@
     button.addEventListener('click', event => {
         event.stopPropagation();
         if (closed || startedAt === undefined) return;
-        wantsSound = !wantsSound;
-        if (wantsSound) play();
-        else { ++request; audio.pause(); label(false); }
+        if (audio.paused) { wantsSound = true; play(); }
+        else { wantsSound = false; ++request; audio.pause(); label(false); }
     });
+    function activateSound(event) {
+        if (!event.isTrusted || closed || !wantsSound || startedAt === undefined || !audio.paused || document.hidden) return;
+        // Explicit mute and exit controls own their click; never override them.
+        if (event.target.closest?.('button,a,input,textarea,select')) return;
+        if (event.type === 'keydown' && !['Enter', ' '].includes(event.key)) return;
+        play();
+    }
+    document.addEventListener('click', activateSound);
+    document.addEventListener('keydown', activateSound);
     overlay.addEventListener('intro:start', event => {
         startedAt = event.detail.startedAt;
         button.hidden = false;
@@ -51,6 +60,8 @@
     overlay.addEventListener('intro:close', () => {
         closed = true; wantsSound = false; ++request;
         document.removeEventListener('visibilitychange', visibility);
+        document.removeEventListener('click', activateSound);
+        document.removeEventListener('keydown', activateSound);
         const start = performance.now(), initialVolume = audio.volume;
         const duration = overlay.dataset.phase === 'flash' ? 580 : 180;
         const fade = now => {

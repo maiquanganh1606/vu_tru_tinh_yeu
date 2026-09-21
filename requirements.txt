@@ -1,2 +1,4 @@
 Flask
 gunicorn
+Pillow>=10,<13
+certifi>=2024.2.2

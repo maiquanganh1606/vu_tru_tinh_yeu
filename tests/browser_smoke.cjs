@@ -15,6 +15,7 @@ const urls = process.env.LOVE_TEST_URL ? [process.env.LOVE_TEST_URL] : [fileURL,
                 const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 800 } });
                 // Verify controls also work when optional CDN assets are unavailable.
                 await context.route(/^https:\/\//, route => route.abort());
+                await context.route('**/three-r128.min.js', route => route.abort());
                 const page = await context.newPage();
                 const errors = [];
                 page.on('pageerror', error => errors.push(error.message));
@@ -31,7 +32,7 @@ const urls = process.env.LOVE_TEST_URL ? [process.env.LOVE_TEST_URL] : [fileURL,
                     assert.equal(await page.locator('#main-panel').isVisible(), true);
                     await page.waitForFunction(() => !document.getElementById('intro-overlay'));
                 }
-                await page.getByRole('button', { name: 'Xem Kho Kỷ Niệm' }).click();
+                await page.getByRole('button', { name: 'Tất cả kỷ niệm' }).click();
                 assert.equal(await page.locator('#gallery-overlay').isVisible(), true);
                 assert.equal(await page.locator('.photo-card').count(), await page.evaluate(() => window.LOVE_IMAGES.length));
                 await page.locator('.photo-card').first().click();
@@ -44,7 +45,7 @@ const urls = process.env.LOVE_TEST_URL ? [process.env.LOVE_TEST_URL] : [fileURL,
                 await page.waitForFunction(() => getComputedStyle(document.getElementById('lightbox')).display === 'none');
                 await page.locator('#gallery-overlay .close-btn').click();
                 await page.waitForFunction(() => getComputedStyle(document.getElementById('gallery-overlay')).display === 'none');
-                await page.getByRole('button', { name: 'HỘP THƯ' }).click();
+                await page.getByRole('button', { name: 'Hộp thư' }).click();
                 await page.locator('.mail-item').first().click();
                 assert.match(await page.locator('.mail-item').first().getAttribute('class'), /opened/);
                 await page.locator('#mailbox-overlay .close-btn').click();

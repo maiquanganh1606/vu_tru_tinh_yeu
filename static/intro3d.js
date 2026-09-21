@@ -77,7 +77,7 @@
     }
     function memory(name, index) {
         const group = new THREE.Group();
-        const texture = own(new THREE.TextureLoader().load(new URL('../static/love_images/'+encodeURIComponent(name), document.baseURI).href, loaded => {
+        const texture = own(new THREE.TextureLoader().load(window.Universe.asset((window.LOVE_UNIVERSE?.memories.find(m=>m.file===name)?.thumbnail) || ('love_images/'+name)), loaded => {
             if (ended) { loaded.dispose(); return; }
             const aspect = loaded.image.width / loaded.image.height;
             photo.scale.x = aspect;

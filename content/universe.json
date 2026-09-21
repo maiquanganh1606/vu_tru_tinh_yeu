@@ -1,0 +1,495 @@
+{
+  "version": 2,
+  "couple": "Quang Anh & Pé Nhi",
+  "startDate": "2025-07-26T00:00:00+07:00",
+  "features": {
+    "audioReactive": true,
+    "memoryPlanets": true,
+    "constellations": true,
+    "timeCapsule": true,
+    "shootingWishes": true,
+    "heartFocus": true
+  },
+  "planets": [
+    {
+      "id": "together",
+      "title": "Những ngày bên nhau",
+      "description": "Mỗi tấm hình là một lần mình muốn quay lại.",
+      "color": "#f49cba",
+      "style": "rose",
+      "allMemories": true,
+      "memoryIds": []
+    },
+    {
+      "id": "locket",
+      "title": "Một chút mỗi ngày",
+      "description": "Những khung hình từ Locket của chúng mình.",
+      "color": "#9bcfe0",
+      "style": "crystal",
+      "memoryIds": [
+        "m-98dc0e3808c0",
+        "m-fa0724e8ff45",
+        "m-b85676a6f265",
+        "m-7340b3c4eaa8",
+        "m-33c68514541b",
+        "m-1ec7d17f737e",
+        "m-f2dabfd062c9",
+        "m-098ce47c9e4d",
+        "m-819acdcb5741"
+      ]
+    },
+    {
+      "id": "messages",
+      "title": "Gửi pé một chút thương",
+      "description": "Những tấm hình mình đã gửi cho nhau qua Messenger.",
+      "color": "#c0b0f0",
+      "style": "ring",
+      "memoryIds": [
+        "m-e0ef31b22b5a",
+        "m-3df473f753f4",
+        "m-6df1f30ad832",
+        "m-34e1d0b18a89",
+        "m-71744eb5dae5",
+        "m-f6394ea7d178",
+        "m-efe1ad5faeba",
+        "m-39604a54b5a8",
+        "m-69e0bbb687ea",
+        "m-06bbeefeb3ae",
+        "m-f42d141febb3",
+        "m-7332f71f73aa",
+        "m-bd80133045cb",
+        "m-7442425eb838",
+        "m-18c41cb15135",
+        "m-6afddb4930fe",
+        "m-33a9c938d5d6",
+        "m-17de5fa38167",
+        "m-d5bb9494359a",
+        "m-fea7c2dfdc4b",
+        "m-cf1eef5fc174"
+      ]
+    }
+  ],
+  "memories": [],
+  "constellations": [
+    {
+      "id": "heart",
+      "version": 1,
+      "title": "Trái tim",
+      "message": "Giữa bao nhiêu vì sao, anh vẫn luôn tìm thấy pé.",
+      "points": [
+        [
+          0.5,
+          0.27
+        ],
+        [
+          0.38,
+          0.17
+        ],
+        [
+          0.24,
+          0.22
+        ],
+        [
+          0.19,
+          0.39
+        ],
+        [
+          0.28,
+          0.55
+        ],
+        [
+          0.5,
+          0.76
+        ],
+        [
+          0.72,
+          0.55
+        ],
+        [
+          0.81,
+          0.39
+        ],
+        [
+          0.76,
+          0.22
+        ],
+        [
+          0.62,
+          0.17
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "qn",
+      "version": 2,
+      "title": "QA & YN",
+      "message": "QA & YN — hai cái tên, một vũ trụ của riêng mình.",
+      "points": [
+        [
+          0.17,
+          0.12
+        ],
+        [
+          0.08,
+          0.23
+        ],
+        [
+          0.12,
+          0.39
+        ],
+        [
+          0.3,
+          0.39
+        ],
+        [
+          0.36,
+          0.23
+        ],
+        [
+          0.27,
+          0.12
+        ],
+        [
+          0.24,
+          0.31
+        ],
+        [
+          0.4,
+          0.46
+        ],
+        [
+          0.6,
+          0.42
+        ],
+        [
+          0.75,
+          0.12
+        ],
+        [
+          0.9,
+          0.42
+        ],
+        [
+          0.67,
+          0.28
+        ],
+        [
+          0.83,
+          0.28
+        ],
+        [
+          0.1,
+          0.6
+        ],
+        [
+          0.36,
+          0.6
+        ],
+        [
+          0.23,
+          0.75
+        ],
+        [
+          0.23,
+          0.92
+        ],
+        [
+          0.6,
+          0.92
+        ],
+        [
+          0.6,
+          0.6
+        ],
+        [
+          0.9,
+          0.92
+        ],
+        [
+          0.9,
+          0.6
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          11
+        ],
+        [
+          11,
+          9
+        ],
+        [
+          9,
+          12
+        ],
+        [
+          12,
+          10
+        ],
+        [
+          11,
+          12
+        ],
+        [
+          13,
+          15
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          15,
+          16
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          19,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "cancer",
+      "version": 1,
+      "title": "Cự Giải",
+      "message": "Dù đi qua bao nhiêu quỹ đạo, Cự Giải nhỏ của anh luôn có một nơi để trở về.",
+      "points": [
+        [
+          0.52,
+          0.16
+        ],
+        [
+          0.47,
+          0.36
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.26,
+          0.77
+        ],
+        [
+          0.79,
+          0.71
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ]
+      ]
+    },
+    {
+      "id": "gemini",
+      "version": 1,
+      "title": "Song Tử",
+      "message": "Hai vì sao sóng đôi, cùng viết tiếp câu chuyện của chúng mình.",
+      "points": [
+        [
+          0.3,
+          0.16
+        ],
+        [
+          0.3,
+          0.32
+        ],
+        [
+          0.14,
+          0.4
+        ],
+        [
+          0.43,
+          0.42
+        ],
+        [
+          0.31,
+          0.56
+        ],
+        [
+          0.2,
+          0.8
+        ],
+        [
+          0.4,
+          0.8
+        ],
+        [
+          0.7,
+          0.16
+        ],
+        [
+          0.7,
+          0.32
+        ],
+        [
+          0.86,
+          0.4
+        ],
+        [
+          0.57,
+          0.42
+        ],
+        [
+          0.69,
+          0.56
+        ],
+        [
+          0.6,
+          0.8
+        ],
+        [
+          0.8,
+          0.8
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          8,
+          10
+        ],
+        [
+          8,
+          11
+        ],
+        [
+          11,
+          12
+        ],
+        [
+          11,
+          13
+        ],
+        [
+          3,
+          10
+        ]
+      ]
+    }
+  ]
+}

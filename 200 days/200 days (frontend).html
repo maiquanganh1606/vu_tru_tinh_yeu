@@ -2,223 +2,16 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vũ Trụ Tình Yêu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Vũ trụ tình yêu · Quang Anh & Pé Nhi</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <style>
-        /* --- 1. CẤU HÌNH CƠ BẢN --- */
-        body {
-            margin: 0; overflow: hidden;
-            background: radial-gradient(circle at center, #1a0520 0%, #000000 100%);
-            font-family: 'Share Tech Mono', monospace; color: #fff;
-            width: 100vw; height: 100vh; cursor: pointer;
-        }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    <link rel="stylesheet" href="../static/intro.css">
 
-        /* --- 2. GIAO DIỆN UI --- */
-        #ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
-            pointer-events: none;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); padding: 2.5rem; border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 105, 180, 0.2); max-width: 90%; position: relative;
-            opacity: 0; transform: translateY(50px); pointer-events: none;
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .glass-panel.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-        .hide-ui-btn {
-            position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: rgba(255,255,255,0.5);
-            cursor: pointer; transition: 0.3s; z-index: 20; font-family: sans-serif;
-        }
-        .hide-ui-btn:hover { color: #ff69b4; transform: rotate(90deg); }
-
-        h1 { font-size: 3.5rem; margin: 0; color: #ff69b4; text-shadow: 0 0 20px #ff69b4; }
-        .couple-names {
-            font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #ffb6c1;
-            text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493; margin-bottom: -10px;
-            animation: glowPulse 3s infinite alternate;
-        }
-        @keyframes glowPulse { from { text-shadow: 0 0 15px #ff69b4; } to { text-shadow: 0 0 50px #ff1493; } }
-
-        #timer { font-size: 1.5rem; margin: 15px 0; color: #a8e6cf; }
-        #typewriter { font-size: 1.1rem; color: #fff; min-height: 1.5em; margin-top: 10px; }
-        .cursor { animation: blink 1s infinite; } @keyframes blink { 50% { opacity: 0; } }
-
-        /* BUTTONS */
-        button { font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: 0.3s; pointer-events: auto; outline: none; }
-
-        .action-bar {
-            position: fixed; bottom: 30px; width: 100%;
-            display: flex; justify-content: center; gap: 20px; z-index: 20;
-            pointer-events: none; /* Để click xuyên qua vùng trống */
-        }
-        .action-btn {
-            background: rgba(0,0,0,0.5); border: 1px solid #ff69b4; color: #ff69b4;
-            padding: 10px 20px; border-radius: 30px; pointer-events: auto;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .action-btn:hover { background: #ff69b4; color: black; box-shadow: 0 0 15px #ff69b4; }
-
-        .gallery-btn {
-            margin-top: 25px; padding: 12px 30px;
-            background: rgba(168, 230, 207, 0.1); border: 1px solid #a8e6cf; color: #a8e6cf;
-            font-size: 1.1rem; border-radius: 30px; text-transform: uppercase; letter-spacing: 2px;
-        }
-        .gallery-btn:hover { background: #a8e6cf; color: #000; box-shadow: 0 0 20px #a8e6cf; }
-
-        /* --- 3. GALLERY & LIGHTBOX --- */
-        #gallery-overlay, #mailbox-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            box-sizing: border-box; background: rgba(20, 5, 20, 0.95); backdrop-filter: blur(15px); z-index: 100;
-            display: none; flex-direction: column; align-items: center; padding: 20px;
-            opacity: 0; transition: opacity 0.5s ease;
-        }
-        .gallery-grid { box-sizing: border-box;
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px; width: 100%; max-width: 1200px; overflow-y: auto; padding: 20px;
-        }
-        .photo-card {
-            border: 0; text-align: left; background: white; padding: 10px 10px 40px 10px; border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: all 0.4s ease; cursor: zoom-in;
-        }
-        .photo-card:hover { transform: scale(1.1) rotate(2deg); z-index: 10; }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
-        .overlay-header { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #ff9a9e; margin: 20px 0; }
-        .close-btn { position: absolute; top: 20px; right: 40px; font-size: 3rem; color: #ff9a9e; cursor: pointer; }
-
-        #lightbox {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 200; display: none;
-            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
-        }
-        #lightbox img { max-width: 90%; max-height: 90%; border: 5px solid #fff; border-radius: 10px; }
-        #lightbox.active img { transform: scale(1); }
-
-        /* --- 4. TÍNH NĂNG MỚI: HỘP THƯ (MAILBOX) --- */
-        .mailbox-grid {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1000px; padding: 20px;
-        }
-        .mail-item {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px; border-radius: 15px; width: 200px; text-align: center;
-            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
-        }
-        .mail-item:hover { transform: translateY(-10px); background: rgba(255, 105, 180, 0.2); border-color: #ff69b4; }
-        .mail-icon { font-size: 3rem; color: #ffb6c1; margin-bottom: 10px; }
-        .mail-title { font-size: 1.2rem; color: #fff; }
-        .mail-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ff69b4; color: #000; display: flex; justify-content: center; align-items: center;
-            padding: 10px; box-sizing: border-box; font-weight: bold;
-            opacity: 0; transition: 0.3s; font-family: sans-serif;
-        }
-        .mail-item.opened .mail-content { opacity: 1; }
-
-        /* --- 5. TÍNH NĂNG MỚI: SAO BĂNG (SHOOTING STARS) --- */
-        .shooting-star {
-            position: absolute; height: 2px; background: linear-gradient(-45deg, rgba(255,255,255,1), rgba(0,0,255,0));
-            border-radius: 999px; filter: drop-shadow(0 0 6px rgba(105,155,255,1)); z-index: 2; pointer-events: none;
-            animation: tail 3s ease-in-out infinite, shooting 3s ease-in-out infinite;
-        }
-        .shooting-star::before, .shooting-star::after {
-            content: ''; position: absolute; top: calc(50% - 1px); right: 0; height: 2px;
-            background: linear-gradient(-45deg, rgba(0,0,255,0), rgba(255,255,255,1), rgba(0,0,255,0));
-            border-radius: 100%; animation: shining 3s ease-in-out infinite;
-        }
-        .shooting-star::after { transform: translateX(50%) rotateZ(-45deg); }
-        .shooting-star::before { transform: translateX(50%) rotateZ(45deg); }
-
-        @keyframes tail { 0% { width: 0; } 30% { width: 100px; } 100% { width: 0; } }
-        @keyframes shooting { 0% { transform: translateX(0); } 100% { transform: translateX(300px); } }
-        @keyframes shining { 0% { width: 0; } 50% { width: 30px; } 100% { width: 0; } }
-
-        /* --- 6. TÍNH NĂNG MỚI: MOUSE TRAIL --- */
-        .heart-trail {
-            position: absolute; width: 10px; height: 10px; background: #ff69b4;
-            transform: rotate(45deg); pointer-events: none; z-index: 9999;
-            box-shadow: 0 0 10px #ff69b4;
-            animation: fadeOut 1s linear forwards;
-        }
-        .heart-trail::before, .heart-trail::after {
-            content: ''; position: absolute; width: 10px; height: 10px; background: #ff69b4; border-radius: 50%;
-        }
-        .heart-trail::before { top: -5px; left: 0; }
-        .heart-trail::after { top: 0; left: -5px; }
-        @keyframes fadeOut { 0% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(45deg); } }
-
-        /* --- 7. CINEMATIC INTRO --- */
-        #intro-overlay {
-            position: fixed; inset: 0; z-index: 500; overflow: hidden;
-            display: grid; place-items: center; background: #03010a;
-            pointer-events: auto;
-            transition: opacity .58s ease, visibility .58s ease;
-        }
-        #intro-3d-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-        #intro-3d-container canvas { display: block; width: 100%; height: 100%; }
-        #intro-flash { position: absolute; inset: 0; z-index: 8; background: #fff; opacity: 0; pointer-events: none; transition: opacity .12s ease; }
-        #intro-flash.active { opacity: 1; }
-        #intro-overlay .intro-nebula, #intro-overlay .intro-memory, #intro-overlay .intro-heart { display: none; }
-        #intro-overlay .intro-content { z-index: 5; pointer-events: none; text-shadow: 0 2px 24px rgba(0,0,0,.75); }
-        #intro-overlay .intro-controls, #intro-overlay .intro-skip { pointer-events: auto; }
-        #intro-overlay .intro-title { opacity: .78; font-size: clamp(2.4rem, 8vw, 5.5rem); }
-        #intro-overlay::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at center, transparent 25%, rgba(3,1,10,.65) 100%); opacity: calc(.5 + var(--warp, 0) * .35); }
-        #intro-overlay.is-flying .intro-content { position: absolute; bottom: max(9vh, 64px); width: min(90vw, 760px); transition: opacity .8s ease; }
-        #intro-overlay.is-flying .intro-title { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.15; margin: .6rem 0; }
-        #intro-overlay.is-flying .intro-controls { display: none; }
-        #intro-overlay[data-phase="warp"] .intro-content { opacity: .65; }
-        #intro-overlay[data-phase="arrival"] .intro-title { font-size: clamp(2rem, 5vw, 3.2rem); }
-        #intro-overlay[data-phase="flash"] .intro-content, #intro-overlay[data-phase="flash"] .intro-skip, #intro-overlay[data-phase="flash"] .intro-progress { opacity: 0; }
-        #intro-overlay .intro-skip { min-height: 44px; padding: 0 12px; border: 1px solid #ffffff25; border-radius: 30px; background: #08031366; }
-        @media (max-width: 600px) { #intro-overlay.is-flying .intro-content { bottom: 10vh; } #intro-overlay .intro-subtitle { font-size: .9rem; line-height: 1.6; } #intro-overlay .intro-kicker { letter-spacing: .15em; } }
-        #intro-overlay.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .intro-nebula, .intro-nebula::before, .intro-nebula::after {
-            position: absolute; inset: -30%; content: ''; pointer-events: none;
-            background: radial-gradient(ellipse at 25% 60%, rgba(146, 42, 165, .28), transparent 45%),
-                        radial-gradient(ellipse at 75% 40%, rgba(30, 105, 190, .2), transparent 42%);
-            filter: blur(20px); animation: nebulaDrift 14s ease-in-out infinite alternate;
-        }
-        .intro-nebula::before { background: radial-gradient(circle at 50% 50%, rgba(255, 84, 174, .18), transparent 28%); animation-duration: 9s; }
-        .intro-nebula::after { background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 90px 90px; opacity: .24; filter: none; animation: starDrift 18s linear infinite; }
-        @keyframes nebulaDrift { to { transform: translate3d(3%, -2%, 0) scale(1.08); } }
-        @keyframes starDrift { to { transform: translate3d(-80px, 40px, 0); } }
-        .intro-content { position: relative; z-index: 20; width: min(92vw, 760px); text-align: center; pointer-events: auto; }
-        .intro-kicker { color: #a8e6cf; font-size: .85rem; letter-spacing: .28em; text-transform: uppercase; opacity: .8; }
-        .intro-title { margin: 1.15rem 0 .5rem; font-family: 'Dancing Script', cursive; font-size: clamp(3.4rem, 11vw, 7.2rem); line-height: .9; color: #ffd3eb; text-shadow: 0 0 20px #ff69b4, 0 0 70px rgba(255, 20, 147, .75); }
-        .intro-subtitle { min-height: 2rem; color: rgba(255,255,255,.82); font-size: clamp(.95rem, 2.2vw, 1.2rem); letter-spacing: .05em; }
-        .intro-memory { pointer-events: none; position: absolute; left: 50%; top: 50%; width: min(42vw, 190px); aspect-ratio: 4/5; padding: 7px 7px 22px; background: #fff; box-shadow: 0 0 28px rgba(255, 179, 222, .55); opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-8deg); transition: opacity .45s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); }
-        .intro-memory img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .intro-memory.show { opacity: .95; transform: translate(-50%, -50%) scale(1) rotate(var(--tilt)); }
-        .intro-memory.fade { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(var(--tilt)); }
-        .intro-heart { pointer-events: none; position: absolute; left: -25vw; top: 62%; width: 90px; height: 90px; transform: rotate(-18deg); filter: drop-shadow(0 0 18px #ff69b4); animation: heartFlight 2.3s cubic-bezier(.2,.7,.2,1) .8s forwards; }
-        .intro-heart::before { content: '❤'; font-size: 5.5rem; color: #ff8dcc; text-shadow: 0 0 14px #fff, 0 0 45px #ff1493; }
-        .intro-heart::after { content: ''; position: absolute; width: 240px; height: 5px; right: 55px; top: 45px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), #ff69b4); border-radius: 99px; transform: skewX(-25deg); box-shadow: 0 0 16px #ff69b4; }
-        @keyframes heartFlight { 0% { left: -25vw; top: 62%; opacity: 0; } 12% { opacity: 1; } 100% { left: 50%; top: 42%; opacity: 1; transform: rotate(0deg) scale(1.1); } }
-        .intro-controls { margin-top: 2.1rem; display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; opacity: 0; animation: introRise .8s ease 3.2s forwards; pointer-events: auto; }
-        .intro-btn { position: relative; z-index: 30; border: 1px solid rgba(255,182,193,.8); border-radius: 999px; padding: .85rem 1.25rem; color: #fff; background: rgba(255,105,180,.12); font: inherit; cursor: pointer; backdrop-filter: blur(8px); transition: .25s; pointer-events: auto; }
-        .intro-btn.primary { background: linear-gradient(100deg, #ff4fa3, #9e5cff); border-color: transparent; box-shadow: 0 0 26px rgba(255,79,163,.4); }
-        .intro-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px rgba(255,182,193,.6); }
-        .intro-skip { position: absolute; top: 1.2rem; right: 1.2rem; z-index: 40; border: 0; color: rgba(255,255,255,.7); background: transparent; font: inherit; cursor: pointer; pointer-events: auto; }
-        #intro-overlay .intro-sound { left: 1.2rem; right: auto; }
-        #intro-overlay .intro-sound[hidden] { display: none; }
-        .intro-progress { pointer-events: none; position: absolute; bottom: 1.4rem; left: 50%; width: min(260px, 60vw); height: 2px; transform: translateX(-50%); background: rgba(255,255,255,.18); overflow: hidden; }
-        .intro-progress span { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #ff69b4, #a8e6cf); transition: width .1s linear; }
-        @keyframes progress { to { width: 100%; } }
-        @keyframes introRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 600px) { .intro-heart { pointer-events: none; top: 58%; } .intro-memory { pointer-events: none; width: 48vw; } .intro-kicker { font-size: .7rem; } .intro-skip { font-size: .8rem; } }
-        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
-
-    </style>
+<link rel="stylesheet" href="../static/universe.css">
 </head>
-
-<body onclick="toggleUIPanel(true)">
+<body class="intro-active">
     <section id="intro-overlay" aria-label="Mở đầu hành trình tình yêu">
         <div id="intro-3d-container" aria-hidden="true"></div>
         <div id="intro-flash" aria-hidden="true"></div>
@@ -240,73 +33,101 @@
         <div class="intro-progress"><span></span></div>
     </section>
 
-    <div id="ui-layer">
-        <div class="glass-panel" id="main-panel">
-            <span class="hide-ui-btn" onclick="toggleUIPanel(false); event.stopPropagation();">&times;</span>
-            <div class="couple-names">Quang Anh & Pé Nhi</div>
-            <h1>200 DAYS</h1>
-            <div id="timer">Calculating...</div>
-            <div id="typewriter"></div>
-            <button class="gallery-btn" onclick="openGallery(); event.stopPropagation();">Xem Kho Kỷ Niệm</button>
-        </div>
-    </div>
 
+<div id="experience">
     <div id="canvas-container"></div>
-
-    <div class="action-bar">
-        <button class="action-btn" id="music-btn" onclick="toggleMusic(); event.stopPropagation();">
-            <i class="fas fa-play"></i> PLAY MUSIC
-        </button>
-        <button class="action-btn" onclick="openMailbox(); event.stopPropagation();">
-            <i class="fas fa-envelope-open-text"></i> HỘP THƯ
-        </button>
+    <div id="planet-labels" aria-label="Các hành tinh ký ức"></div>
+    <div id="meteor-layer"></div>
+    <header class="main-panel glass-panel" id="main-panel">
+        <button id="hide-panel" class="hide-ui-btn" type="button" aria-label="Ẩn lời chào">×</button>
+        <p class="eyebrow">MỘT VŨ TRỤ · HAI CHÚNG MÌNH</p>
+        <div class="couple-names">Quang Anh & Pé Nhi</div>
+        <div id="timer"></div><p id="typewriter"></p>
+    </header>
+    <button id="show-panel" class="sky-brand" aria-label="Hiện lời chào">QA & YN <span>∞</span></button>
+    <aside class="sky-note"><span class="tiny-orbit"></span><p>Mỗi hành tinh<br>là một lần thương.</p></aside>
+    <button id="capsule-open" class="portal-button" type="button"><span class="portal-ring" aria-hidden="true"></span><span>Một ngày mai</span><small>Hố đen thời gian</small></button>
+    <div id="sky-controls" class="sky-controls">
+        <p class="sky-hint">Chạm vào một hành tinh để ghé thăm ký ức</p>
+        <nav class="action-bar" aria-label="Khám phá vũ trụ">
+            <button class="action-btn" id="map-btn" type="button">Khám phá</button>
+            <button class="action-btn" id="draw-stars-btn" type="button">Nối chòm sao</button>
+            <button class="action-btn" id="music-btn" type="button" aria-pressed="false">♫ Bật nhạc</button>
+            <button class="action-btn" id="mailbox-btn" type="button">Hộp thư</button>
+            <button class="action-btn" id="quality-btn" type="button" aria-pressed="false">Hiệu ứng nhẹ</button>
+        </nav>
+        <div class="sky-shortcuts"><button id="open-gallery-btn" type="button">Tất cả kỷ niệm</button><span>·</span><button id="wish-direct-btn" type="button">Ước một điều</button></div>
     </div>
-
-    <div id="gallery-overlay">
-        <div class="overlay-header">✨ Our Sweet Memories ✨</div>
-        <span class="close-btn" onclick="closeOverlay('gallery-overlay')">&times;</span>
-        <div class="gallery-grid"></div>
-    </div>
-
-    <div id="mailbox-overlay">
-        <div class="overlay-header">💌 Open When... 💌</div>
-        <span class="close-btn" onclick="closeOverlay('mailbox-overlay')">&times;</span>
-        <div class="mailbox-grid">
-            <div class="mail-item" onclick="toggleMail(this)">
-                <div class="mail-icon"><i class="fas fa-heart-broken"></i></div>
-                <div class="mail-title">Khi pé buồn</div>
-                <div class="mail-content">Anh luôn ở đây mà, ôm anh đi! ❤️</div>
-            </div>
-            <div class="mail-item" onclick="toggleMail(this)">
-                <div class="mail-icon"><i class="fas fa-grin-hearts"></i></div>
-                <div class="mail-title">Khi pé nhớ anh</div>
-                <div class="mail-content">Anh cũng nhớ pé x3000 lần! 🚀</div>
-            </div>
-            <div class="mail-item" onclick="toggleMail(this)">
-                <div class="mail-icon"><i class="fas fa-angry"></i></div>
-                <div class="mail-title">Khi mình giận nhau</div>
-                <div class="mail-content">Anh xin lỗi, mình đi ăn gì nhé? 🥺</div>
-            </div>
-            <div class="mail-item" onclick="toggleMail(this)">
-                <div class="mail-icon"><i class="fas fa-bed"></i></div>
-                <div class="mail-title">Khi pé khó ngủ</div>
-                <div class="mail-content">Nhắm mắt lại và mơ về anh nha 🌙</div>
-            </div>
+    <div id="orbit-photos" class="orbit-photos"></div>
+    <button id="heart-open" class="heart-open" type="button" aria-label="Ngắm trái tim của hai đứa">♥ <span>Chạm vào trái tim</span></button>
+    <section id="heart-focus" class="heart-focus" role="dialog" hidden aria-labelledby="heart-focus-title">
+        <div class="heart-focus-backdrop" data-heart-close aria-hidden="true"></div>
+        <div class="heart-fallback" data-heart-close aria-hidden="true">♥</div>
+        <div class="heart-focus-content">
+            <p class="eyebrow">MỘT VŨ TRỤ · HAI CHÚNG MÌNH</p>
+            <h1 id="heart-focus-title">Quang Anh &amp; Pé Nhi</h1>
+            <p id="heart-focus-timer" class="heart-focus-timer"></p>
+            <p class="heart-focus-message">Giữa bao nhiêu vì sao, anh vẫn luôn tìm thấy pé.</p>
+            <button id="heart-focus-close" class="primary-button" type="button">← Về bầu trời</button>
         </div>
+    </section>
+    <section id="planet-detail" class="planet-detail" hidden>
+        <button id="planet-back" class="text-button" type="button">← Về bầu trời</button>
+        <p class="eyebrow">MỘT MIỀN KÝ ỨC</p><h2 id="planet-title"></h2><p id="planet-description"></p>
+        <button id="planet-gallery" class="primary-button" type="button">Xem những khung hình</button>
+    </section>
+</div>
+<section id="constellation-panel" class="constellation-panel" hidden aria-label="Vẽ chòm sao">
+    <div class="drawing-heading"><p class="eyebrow">VIẾT LỜI THƯƠNG LÊN BẦU TRỜI</p><h2>Nối những vì sao</h2><button id="constellation-close" class="text-button" type="button">← Về bầu trời</button></div>
+    <div id="constellation-tabs" class="constellation-tabs"></div>
+    <div id="constellation-board" class="constellation-board">
+        <svg id="constellation-lines" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg><div id="constellation-points"></div>
     </div>
-
-    <div id="lightbox" onclick="closeLightbox()">
-        <img id="lightbox-img" src="">
-    </div>
-
-    <audio id="bg-music" loop preload="none">
-        <source src="../static/love_song.mp3" type="audio/mpeg">
-    </audio>
-
-    <script id="three-library" async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script defer src="../static/memories.js"></script>
-    <script defer src="../static/app.js"></script>
-    <script defer src="../static/intro-audio.js"></script>
-    <script defer src="../static/intro3d.js"></script>
+    <p id="constellation-progress" class="eyebrow"></p><p id="constellation-message" class="constellation-message" aria-live="polite"></p>
+    <div class="drawing-tools"><button id="constellation-undo" class="chip" type="button">Lùi một nét</button><button id="constellation-lift" class="chip" type="button">Nét mới</button><button id="constellation-reset" class="chip" type="button">Vẽ lại</button></div>
+</section>
+<div id="map-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="map-title">
+    <section class="modal-card"><button id="map-close" class="modal-close" type="button" aria-label="Đóng bản đồ">×</button><p class="eyebrow">CHỌN MỘT ĐIỂM ĐẾN</p><h2 id="map-title">Bản đồ của hai đứa</h2><p>Mỗi khung hình giữ lại một chút chúng mình.</p><div id="planet-menu" class="planet-menu"></div></section>
+</div>
+<div id="gallery-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="gallery-title">
+    <section class="modal-card gallery-card"><button id="gallery-close" class="modal-close close-btn" type="button" aria-label="Đóng kho ảnh">×</button><p class="eyebrow">NHỮNG ĐIỀU MÌNH GIỮ LẠI</p><h2 id="gallery-title">Tất cả kỷ niệm</h2><div id="gallery-grid" class="gallery-grid"></div></section>
+</div>
+<div id="lightbox" class="universe-modal" hidden role="dialog" aria-label="Xem ảnh lớn">
+    <section class="lightbox-card"><button id="lightbox-close" class="modal-close" type="button" aria-label="Đóng ảnh">×</button><img id="lightbox-img" alt="Kỷ niệm của chúng mình"><p id="lightbox-caption"></p><div class="lightbox-nav"><button id="lightbox-prev" class="chip" type="button">← Ảnh trước</button><span id="lightbox-counter"></span><button id="lightbox-next" class="chip" type="button">Ảnh sau →</button></div></section>
+</div>
+<div id="mailbox-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="mailbox-title">
+    <section class="modal-card"><button id="mailbox-close" class="modal-close close-btn" type="button" aria-label="Đóng hộp thư">×</button><p class="eyebrow">ANH VẪN LUÔN Ở ĐÂY</p><h2 id="mailbox-title">Mở khi pé cần một cái ôm</h2><div class="mailbox-grid">
+        <button class="mail-item" type="button" aria-expanded="false"><span class="mail-title">Khi pé buồn</span><span class="mail-content">Anh luôn ở đây mà, ôm anh đi! ❤️</span></button>
+        <button class="mail-item" type="button" aria-expanded="false"><span class="mail-title">Khi pé nhớ anh</span><span class="mail-content">Anh cũng nhớ pé x3000 lần! 🚀</span></button>
+        <button class="mail-item" type="button" aria-expanded="false"><span class="mail-title">Khi mình giận nhau</span><span class="mail-content">Anh xin lỗi, mình đi ăn gì nhé? 🥺</span></button>
+        <button class="mail-item" type="button" aria-expanded="false"><span class="mail-title">Khi pé khó ngủ</span><span class="mail-content">Nhắm mắt lại và mơ về anh nha 🌙</span></button>
+    </div></section>
+</div>
+<div id="capsule-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="capsule-title">
+    <section class="modal-card capsule-card"><button id="capsule-close" class="modal-close" type="button" aria-label="Đóng cánh cổng">×</button><p class="eyebrow">GỬI CHÚNG MÌNH CỦA TƯƠNG LAI</p><h2 id="capsule-title">Một ngày mai</h2><p id="capsule-question"></p><p id="capsule-state" class="form-status" aria-live="polite"></p><p id="capsule-countdown" class="countdown"></p><p id="capsule-unlock-date" hidden></p>
+        <form id="capsule-form"><div id="capsule-answer-wrap"><label for="capsule-answer">Câu trả lời của pé</label><input id="capsule-answer" type="password" autocomplete="off" maxlength="200" required></div><button id="capsule-submit" class="primary-button" type="submit">Mở cánh cổng</button></form>
+        <div id="capsule-letter-wrap" hidden><div id="capsule-letter" class="future-letter"></div></div>
+    </section>
+</div>
+<div id="wish-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="wish-title">
+    <section class="modal-card"><button id="wish-close" class="modal-close" type="button" aria-label="Để điều ước lại sau">×</button><p class="eyebrow">ĐIỀU ƯỚC CỦA RIÊNG PÉ</p><h2 id="wish-title">Gửi một điều ước</h2><p id="wish-intro">Có điều gì pé muốn anh cùng thực hiện không?</p><form id="wish-form"><label for="wish-text">Pé ước rằng…</label><textarea id="wish-text" rows="5" maxlength="1000" required placeholder="Viết một điều thật lòng ở đây..."></textarea><p id="wish-status" class="form-status" aria-live="polite"></p><button id="wish-submit" class="primary-button" type="submit">Gửi điều ước</button></form></section>
+</div>
+<div id="live-status" class="sr-only" role="status" aria-live="polite"></div>
+<audio id="bg-music" loop preload="none"><source src="../static/love_song.web.mp3" type="audio/mpeg"><source src="../static/love_song.mp3" type="audio/mpeg"></audio>
+<script id="three-library" defer src="../static/vendor/three-r128.min.js"></script>
+<script defer src="../static/memories.js"></script>
+<script defer src="../static/universe/core.js"></script>
+<script defer src="../static/universe/audio.js"></script>
+<script defer src="../static/universe/camera.js"></script>
+<script defer src="../static/universe/planets.js"></script>
+<script defer src="../static/universe/constellations.js"></script>
+<script defer src="../static/universe/meteors.js"></script>
+<script defer src="../static/universe/capsule.js"></script>
+<script defer src="../static/universe/wishes.js"></script>
+<script defer src="../static/universe/heart.js"></script>
+<script defer src="../static/universe/scene.js"></script>
+<script defer src="../static/app.js"></script>
+<script defer src="../static/intro-audio.js"></script>
+<script defer src="../static/intro3d.js"></script>
 </body>
 </html>
