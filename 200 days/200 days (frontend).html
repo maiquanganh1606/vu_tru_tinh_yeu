@@ -206,6 +206,8 @@
         .intro-btn.primary { background: linear-gradient(100deg, #ff4fa3, #9e5cff); border-color: transparent; box-shadow: 0 0 26px rgba(255,79,163,.4); }
         .intro-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px rgba(255,182,193,.6); }
         .intro-skip { position: absolute; top: 1.2rem; right: 1.2rem; z-index: 40; border: 0; color: rgba(255,255,255,.7); background: transparent; font: inherit; cursor: pointer; pointer-events: auto; }
+        #intro-overlay .intro-sound { left: 1.2rem; right: auto; }
+        #intro-overlay .intro-sound[hidden] { display: none; }
         .intro-progress { pointer-events: none; position: absolute; bottom: 1.4rem; left: 50%; width: min(260px, 60vw); height: 2px; transform: translateX(-50%); background: rgba(255,255,255,.18); overflow: hidden; }
         .intro-progress span { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #ff69b4, #a8e6cf); transition: width .1s linear; }
         @keyframes progress { to { width: 100%; } }
@@ -220,6 +222,8 @@
     <section id="intro-overlay" aria-label="Mở đầu hành trình tình yêu">
         <div id="intro-3d-container" aria-hidden="true"></div>
         <div id="intro-flash" aria-hidden="true"></div>
+        <audio id="intro-music" src="../static/intro_score.mp3" preload="auto"></audio>
+        <button type="button" class="intro-skip intro-sound" id="intro-sound-btn" aria-pressed="false" hidden>Bật nhạc intro ♫</button>
         <div class="intro-nebula"></div>
         <button type="button" class="intro-skip" id="intro-skip-btn">Bỏ qua intro ↗</button>
         <div class="intro-content">
@@ -302,6 +306,7 @@
     <script id="three-library" async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script defer src="../static/memories.js"></script>
     <script defer src="../static/app.js"></script>
+    <script defer src="../static/intro-audio.js"></script>
     <script defer src="../static/intro3d.js"></script>
 </body>
 </html>

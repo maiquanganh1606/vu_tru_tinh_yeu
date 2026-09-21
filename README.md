@@ -25,3 +25,11 @@ node tests/intro_cinematic.cjs
 ```
 
 Smoke test kiểm tra desktop/mobile khi CDN bị chặn: bỏ qua intro, thư viện ảnh, hộp thư, nhạc và ẩn/hiện giao diện. Cinematic test kiểm tra đủ ba hồi, chuyển sang cảnh chính, giải phóng canvas intro và chế độ giảm chuyển động. Ảnh kiểm thử lưu trong `output/playwright/`. Có thể đặt `LOVE_TEST_URL` để kiểm tra một địa chỉ khác.
+
+## Nhạc intro
+
+“Cùng một quỹ đạo” là bản instrumental tổng hợp riêng dài 28 giây: piano mềm và pad mở đầu, arpeggio cùng nhịp bass ở hyperdrive, hợp âm sáng tại mốc 26,8 giây. Không dùng sample hay bản thu của bên thứ ba. File MP3 được phục vụ cùng website, không phụ thuộc dịch vụ nhạc ngoài.
+
+Trình duyệt cho phép thì nhạc tự phát ở âm lượng 55%; nếu bị chặn, chọn **Bật nhạc intro ♫**. Bật muộn vẫn khớp vị trí cảnh bay. Có thể tắt nhạc, và nhạc tự giảm âm khi bỏ qua/kết thúc intro. Bài nhạc của giao diện chính vẫn bật riêng bằng nút PLAY MUSIC.
+
+Để dựng lại file nhạc: cài NumPy và FFmpeg, rồi chạy `python scripts/render_intro_score.py`. Chạy `node tests/intro_audio.cjs` để kiểm tra bật/tắt, đồng bộ, kết thúc và lỗi tải nhạc.

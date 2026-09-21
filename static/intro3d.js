@@ -120,7 +120,10 @@
     }
     function render(now) {
         if (ended || collision) return;
-        if (start === undefined) start = previous = now;
+        if (start === undefined) {
+            start = previous = now;
+            overlay.dispatchEvent(new CustomEvent('intro:start', { detail: { startedAt: now } }));
+        }
         const t = (now-start)/1000, dt = Math.min((now-previous)/1000, .05); previous = now;
         const [distance, velocity] = flight(t);
         const speed = smooth((velocity-30)/270), arrival = smooth((t-22.4)/3.5);
