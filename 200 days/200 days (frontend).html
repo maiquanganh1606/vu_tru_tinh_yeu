@@ -77,16 +77,16 @@
         /* --- 3. GALLERY & LIGHTBOX --- */
         #gallery-overlay, #mailbox-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(20, 5, 20, 0.95); backdrop-filter: blur(15px); z-index: 100;
+            box-sizing: border-box; background: rgba(20, 5, 20, 0.95); backdrop-filter: blur(15px); z-index: 100;
             display: none; flex-direction: column; align-items: center; padding: 20px;
             opacity: 0; transition: opacity 0.5s ease;
         }
-        .gallery-grid {
+        .gallery-grid { box-sizing: border-box;
             display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px; width: 100%; max-width: 1200px; overflow-y: auto; padding: 20px;
         }
         .photo-card {
-            background: white; padding: 10px 10px 40px 10px; border-radius: 4px;
+            border: 0; text-align: left; background: white; padding: 10px 10px 40px 10px; border-radius: 4px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: all 0.4s ease; cursor: zoom-in;
         }
         .photo-card:hover { transform: scale(1.1) rotate(2deg); z-index: 10; }
@@ -154,10 +154,87 @@
         .heart-trail::after { top: 0; left: -5px; }
         @keyframes fadeOut { 0% { opacity: 1; transform: scale(1) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(45deg); } }
 
+        /* --- 7. CINEMATIC INTRO --- */
+        #intro-overlay {
+            position: fixed; inset: 0; z-index: 500; overflow: hidden;
+            display: grid; place-items: center; background: #03010a;
+            pointer-events: auto;
+            transition: opacity .58s ease, visibility .58s ease;
+        }
+        #intro-3d-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        #intro-3d-container canvas { display: block; width: 100%; height: 100%; }
+        #intro-flash { position: absolute; inset: 0; z-index: 8; background: #fff; opacity: 0; pointer-events: none; transition: opacity .12s ease; }
+        #intro-flash.active { opacity: 1; }
+        #intro-overlay .intro-nebula, #intro-overlay .intro-memory, #intro-overlay .intro-heart { display: none; }
+        #intro-overlay .intro-content { z-index: 5; pointer-events: none; text-shadow: 0 2px 24px rgba(0,0,0,.75); }
+        #intro-overlay .intro-controls, #intro-overlay .intro-skip { pointer-events: auto; }
+        #intro-overlay .intro-title { opacity: .78; font-size: clamp(2.4rem, 8vw, 5.5rem); }
+        #intro-overlay::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at center, transparent 25%, rgba(3,1,10,.65) 100%); opacity: calc(.5 + var(--warp, 0) * .35); }
+        #intro-overlay.is-flying .intro-content { position: absolute; bottom: max(9vh, 64px); width: min(90vw, 760px); transition: opacity .8s ease; }
+        #intro-overlay.is-flying .intro-title { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.15; margin: .6rem 0; }
+        #intro-overlay.is-flying .intro-controls { display: none; }
+        #intro-overlay[data-phase="warp"] .intro-content { opacity: .65; }
+        #intro-overlay[data-phase="arrival"] .intro-title { font-size: clamp(2rem, 5vw, 3.2rem); }
+        #intro-overlay[data-phase="flash"] .intro-content, #intro-overlay[data-phase="flash"] .intro-skip, #intro-overlay[data-phase="flash"] .intro-progress { opacity: 0; }
+        #intro-overlay .intro-skip { min-height: 44px; padding: 0 12px; border: 1px solid #ffffff25; border-radius: 30px; background: #08031366; }
+        @media (max-width: 600px) { #intro-overlay.is-flying .intro-content { bottom: 10vh; } #intro-overlay .intro-subtitle { font-size: .9rem; line-height: 1.6; } #intro-overlay .intro-kicker { letter-spacing: .15em; } }
+        #intro-overlay.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .intro-nebula, .intro-nebula::before, .intro-nebula::after {
+            position: absolute; inset: -30%; content: ''; pointer-events: none;
+            background: radial-gradient(ellipse at 25% 60%, rgba(146, 42, 165, .28), transparent 45%),
+                        radial-gradient(ellipse at 75% 40%, rgba(30, 105, 190, .2), transparent 42%);
+            filter: blur(20px); animation: nebulaDrift 14s ease-in-out infinite alternate;
+        }
+        .intro-nebula::before { background: radial-gradient(circle at 50% 50%, rgba(255, 84, 174, .18), transparent 28%); animation-duration: 9s; }
+        .intro-nebula::after { background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 90px 90px; opacity: .24; filter: none; animation: starDrift 18s linear infinite; }
+        @keyframes nebulaDrift { to { transform: translate3d(3%, -2%, 0) scale(1.08); } }
+        @keyframes starDrift { to { transform: translate3d(-80px, 40px, 0); } }
+        .intro-content { position: relative; z-index: 20; width: min(92vw, 760px); text-align: center; pointer-events: auto; }
+        .intro-kicker { color: #a8e6cf; font-size: .85rem; letter-spacing: .28em; text-transform: uppercase; opacity: .8; }
+        .intro-title { margin: 1.15rem 0 .5rem; font-family: 'Dancing Script', cursive; font-size: clamp(3.4rem, 11vw, 7.2rem); line-height: .9; color: #ffd3eb; text-shadow: 0 0 20px #ff69b4, 0 0 70px rgba(255, 20, 147, .75); }
+        .intro-subtitle { min-height: 2rem; color: rgba(255,255,255,.82); font-size: clamp(.95rem, 2.2vw, 1.2rem); letter-spacing: .05em; }
+        .intro-memory { pointer-events: none; position: absolute; left: 50%; top: 50%; width: min(42vw, 190px); aspect-ratio: 4/5; padding: 7px 7px 22px; background: #fff; box-shadow: 0 0 28px rgba(255, 179, 222, .55); opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-8deg); transition: opacity .45s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); }
+        .intro-memory img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .intro-memory.show { opacity: .95; transform: translate(-50%, -50%) scale(1) rotate(var(--tilt)); }
+        .intro-memory.fade { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(var(--tilt)); }
+        .intro-heart { pointer-events: none; position: absolute; left: -25vw; top: 62%; width: 90px; height: 90px; transform: rotate(-18deg); filter: drop-shadow(0 0 18px #ff69b4); animation: heartFlight 2.3s cubic-bezier(.2,.7,.2,1) .8s forwards; }
+        .intro-heart::before { content: '❤'; font-size: 5.5rem; color: #ff8dcc; text-shadow: 0 0 14px #fff, 0 0 45px #ff1493; }
+        .intro-heart::after { content: ''; position: absolute; width: 240px; height: 5px; right: 55px; top: 45px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), #ff69b4); border-radius: 99px; transform: skewX(-25deg); box-shadow: 0 0 16px #ff69b4; }
+        @keyframes heartFlight { 0% { left: -25vw; top: 62%; opacity: 0; } 12% { opacity: 1; } 100% { left: 50%; top: 42%; opacity: 1; transform: rotate(0deg) scale(1.1); } }
+        .intro-controls { margin-top: 2.1rem; display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; opacity: 0; animation: introRise .8s ease 3.2s forwards; pointer-events: auto; }
+        .intro-btn { position: relative; z-index: 30; border: 1px solid rgba(255,182,193,.8); border-radius: 999px; padding: .85rem 1.25rem; color: #fff; background: rgba(255,105,180,.12); font: inherit; cursor: pointer; backdrop-filter: blur(8px); transition: .25s; pointer-events: auto; }
+        .intro-btn.primary { background: linear-gradient(100deg, #ff4fa3, #9e5cff); border-color: transparent; box-shadow: 0 0 26px rgba(255,79,163,.4); }
+        .intro-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px rgba(255,182,193,.6); }
+        .intro-skip { position: absolute; top: 1.2rem; right: 1.2rem; z-index: 40; border: 0; color: rgba(255,255,255,.7); background: transparent; font: inherit; cursor: pointer; pointer-events: auto; }
+        .intro-progress { pointer-events: none; position: absolute; bottom: 1.4rem; left: 50%; width: min(260px, 60vw); height: 2px; transform: translateX(-50%); background: rgba(255,255,255,.18); overflow: hidden; }
+        .intro-progress span { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #ff69b4, #a8e6cf); transition: width .1s linear; }
+        @keyframes progress { to { width: 100%; } }
+        @keyframes introRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 600px) { .intro-heart { pointer-events: none; top: 58%; } .intro-memory { pointer-events: none; width: 48vw; } .intro-kicker { font-size: .7rem; } .intro-skip { font-size: .8rem; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
     </style>
 </head>
 
 <body onclick="toggleUIPanel(true)">
+    <section id="intro-overlay" aria-label="Mở đầu hành trình tình yêu">
+        <div id="intro-3d-container" aria-hidden="true"></div>
+        <div id="intro-flash" aria-hidden="true"></div>
+        <div class="intro-nebula"></div>
+        <button type="button" class="intro-skip" id="intro-skip-btn">Bỏ qua intro ↗</button>
+        <div class="intro-content">
+            <div class="intro-kicker" id="intro-kicker">Đang mở khóa ký ức...</div>
+            <div class="intro-heart" aria-hidden="true"></div>
+            <div class="intro-memory" id="intro-memory"><img id="intro-memory-img" alt="Một kỷ niệm của chúng ta"></div>
+            <h2 class="intro-title" id="intro-title">Vũ trụ tình yêu</h2>
+            <div class="intro-subtitle" id="intro-subtitle">Nơi mỗi khoảnh khắc trở thành một vì sao.</div>
+            <div class="intro-controls">
+                <button type="button" class="intro-btn primary" id="intro-enter-btn">Bước vào vũ trụ ♥</button>
+                <button type="button" class="intro-btn" id="intro-watch-btn">Xem ngay hành trình</button>
+            </div>
+        </div>
+        <div class="intro-progress"><span></span></div>
+    </section>
 
     <div id="ui-layer">
         <div class="glass-panel" id="main-panel">
@@ -184,17 +261,7 @@
     <div id="gallery-overlay">
         <div class="overlay-header">✨ Our Sweet Memories ✨</div>
         <span class="close-btn" onclick="closeOverlay('gallery-overlay')">&times;</span>
-        <div class="gallery-grid">
-            {% if images %}
-                {% for img in images %}
-                <div class="photo-card">
-                    <img src="{{ url_for('static', filename='love_images/' + img) }}" loading="lazy" onclick="zoomImage(this.src); event.stopPropagation();">
-                </div>
-                {% endfor %}
-            {% else %}
-                <h3 style="color: #ccc;">(Demo: Chưa có ảnh trong folder)</h3>
-            {% endif %}
-        </div>
+        <div class="gallery-grid"></div>
     </div>
 
     <div id="mailbox-overlay">
@@ -228,265 +295,13 @@
         <img id="lightbox-img" src="">
     </div>
 
-    <audio id="bg-music" loop crossorigin="anonymous">
-        <source src="{{ url_for('static', filename='love_song.mp3') }}" type="audio/mpeg">
+    <audio id="bg-music" loop preload="none">
+        <source src="../static/love_song.mp3" type="audio/mpeg">
     </audio>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        // --- 1. CONFIG & UTILS ---
-        const startDate = new Date(2025, 6, 26); // Tháng 7 là 6
-
-        function toggleUIPanel(show) {
-            const panel = document.getElementById('main-panel');
-            if (show) panel.classList.add('visible');
-            else panel.classList.remove('visible');
-        }
-
-        function updateTimer() {
-            const now = new Date();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / 1000 / 60) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-            const el = document.getElementById('timer');
-            if(el) el.innerText = `${days} Days : ${hours} Hours : ${minutes} Mins : ${seconds} Secs`;
-        }
-        setInterval(updateTimer, 1000); updateTimer();
-
-        const message = "Hello my love! Chào mừng pé đến với vũ trụ tình iu của chúng ta...";
-        const typeTarget = document.getElementById('typewriter');
-        let i = 0;
-        function typeWriter() {
-            if (typeTarget && i < message.length) {
-                typeTarget.innerHTML += message.charAt(i); i++; setTimeout(typeWriter, 100);
-            } else if (typeTarget) {
-                typeTarget.innerHTML += '<span class="cursor">_</span>';
-            }
-        }
-        setTimeout(typeWriter, 1000);
-
-        // --- 2. AUDIO VISUALIZER SETUP ---
-        let audioContext, analyser, dataArray, source;
-        let isAudioSetup = false;
-        let beatStrength = 0; // Biến dùng để truyền độ mạnh của nhạc vào 3D
-
-        function setupAudio() {
-            if (isAudioSetup) return;
-            const audio = document.getElementById('bg-music');
-
-            // Tạo AudioContext
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaElementSource(audio);
-
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-
-            analyser.fftSize = 256;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-            isAudioSetup = true;
-        }
-
-        function toggleMusic() {
-            const audio = document.getElementById('bg-music');
-            const btn = document.getElementById('music-btn');
-
-            if (!isAudioSetup) setupAudio(); // Khởi tạo lần đầu click
-            if (audioContext && audioContext.state === 'suspended') audioContext.resume();
-
-            if (audio.paused) {
-                audio.play();
-                btn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
-            } else {
-                audio.pause();
-                btn.innerHTML = '<i class="fas fa-play"></i> PLAY MUSIC';
-            }
-        }
-
-        // --- 3. OVERLAYS & GALLERY ---
-        function openGallery() {
-            const over = document.getElementById('gallery-overlay');
-            over.style.display = 'flex'; setTimeout(() => over.style.opacity = '1', 10);
-        }
-        function openMailbox() {
-            const over = document.getElementById('mailbox-overlay');
-            over.style.display = 'flex'; setTimeout(() => over.style.opacity = '1', 10);
-        }
-        function closeOverlay(id) {
-            const over = document.getElementById(id);
-            over.style.opacity = '0'; setTimeout(() => over.style.display = 'none', 500);
-        }
-        function toggleMail(el) {
-            el.classList.toggle('opened');
-        }
-        function zoomImage(src) {
-            const lb = document.getElementById('lightbox');
-            document.getElementById('lightbox-img').src = src;
-            lb.style.display = 'flex'; setTimeout(() => { lb.style.opacity = '1'; lb.classList.add('active'); }, 10);
-        }
-        function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            lb.style.opacity = '0'; lb.classList.remove('active'); setTimeout(() => lb.style.display = 'none', 300);
-        }
-
-        // --- 4. MOUSE TRAIL EFFECT ---
-        document.addEventListener('mousemove', function(e) {
-            // Chỉ tạo hạt nếu không hover lên UI để đỡ rối
-            if (e.target.closest('.glass-panel') || e.target.closest('.action-bar')) return;
-
-            const heart = document.createElement('div');
-            heart.className = 'heart-trail';
-            heart.style.left = e.pageX + 'px';
-            heart.style.top = e.pageY + 'px';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1000);
-        });
-
-        // --- 5. SHOOTING STARS ---
-        function createShootingStars() {
-            setInterval(() => {
-                const star = document.createElement('div');
-                star.className = 'shooting-star';
-                star.style.left = Math.random() * window.innerWidth + 'px';
-                star.style.top = Math.random() * (window.innerHeight / 2) + 'px';
-                star.style.transform = `rotate(${Math.random() * 45 - 22.5}deg)`;
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 3000);
-            }, 2500);
-        }
-        createShootingStars();
-
-        // --- 6. THREE.JS 3D HEART ---
-        let scene, camera, renderer, heartCloud, stars, auraCloud;
-        let mouseX = 0, mouseY = 0; let windowHalfX = window.innerWidth/2; let windowHalfY = window.innerHeight/2;
-
-        initThree(); animate();
-
-        function initThree() {
-            const container = document.getElementById('canvas-container');
-            if(!container) return;
-            scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x1a0520, 0.002);
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 2000);
-            camera.position.z = 400;
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            createVolumetricHeart();
-            createStarfield();
-            createAura();
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = (e.clientX - windowHalfX) * 0.05; mouseY = (e.clientY - windowHalfY) * 0.05;
-            }, false);
-            window.addEventListener('resize', () => {
-                windowHalfX = window.innerWidth/2; windowHalfY = window.innerHeight/2;
-                camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }, false);
-        }
-
-        function createVolumetricHeart() {
-            const particles = 25000;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particles * 3);
-            const colors = new Float32Array(particles * 3);
-            const color = new THREE.Color();
-
-            for (let i = 0; i < particles; i++) {
-                const u = Math.random() * Math.PI * 2;
-                const v = Math.random() * Math.PI;
-                const x = 16 * Math.pow(Math.sin(u), 3) * Math.sin(v);
-                const y = (13 * Math.cos(u) - 5 * Math.cos(2*u) - 2 * Math.cos(3*u) - Math.cos(4*u)) * Math.sin(v);
-                const z = 6 * Math.cos(v);
-                const scale = 11;
-                positions[i*3] = x * scale + (Math.random()-0.5)*0.6;
-                positions[i*3+1] = y * scale + (Math.random()-0.5)*0.6;
-                positions[i*3+2] = z * scale + (Math.random()-0.5)*0.6;
-
-                const normalizedZ = (z * scale + 100) / 200;
-                if (Math.random() > 0.1) color.setHSL(0.88 + normalizedZ * 0.05, 0.9, 0.6 + normalizedZ * 0.2);
-                else color.setHSL(0.9, 1.0, 0.95);
-                colors[i*3] = color.r; colors[i*3+1] = color.g; colors[i*3+2] = color.b;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            heartCloud = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 2.5, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.9, sizeAttenuation: true }));
-            scene.add(heartCloud);
-        }
-
-        function createAura() {
-            const particles = 1500;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particles * 3);
-            const colors = new Float32Array(particles * 3);
-            const color = new THREE.Color();
-            for (let i = 0; i < particles; i++) {
-                const r = 250 + Math.random() * 200;
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.acos((Math.random() * 2) - 1);
-                positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
-                positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-                positions[i*3+2] = r * Math.cos(phi);
-                color.setHSL(0.9, 0.8, 0.8);
-                colors[i*3] = color.r; colors[i*3+1] = color.g; colors[i*3+2] = color.b;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            auraCloud = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 1.5, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, opacity: 0.5 }));
-            scene.add(auraCloud);
-        }
-
-        function createStarfield() {
-            const geometry = new THREE.BufferGeometry(); const positions = new Float32Array(4000 * 3);
-            for(let i=0; i<4000; i++) {
-                positions[i*3] = (Math.random()-0.5)*2000; positions[i*3+1] = (Math.random()-0.5)*2000; positions[i*3+2] = (Math.random()-0.5)*2000 - 500;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            stars = new THREE.Points(geometry, new THREE.PointsMaterial({ size: 1.2, color: 0xffd1dc, transparent: true, opacity: 0.6 }));
-            scene.add(stars);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // --- AUDIO VISUALIZER LOGIC ---
-            let scaleBeat = 1;
-            if (isAudioSetup && analyser) {
-                analyser.getByteFrequencyData(dataArray);
-                // Lấy trung bình dải Bass (tần số thấp) để làm nhịp đập
-                let sum = 0;
-                for(let i = 0; i < 10; i++) sum += dataArray[i];
-                let avg = sum / 10;
-                // Scale từ 1.0 đến khoảng 1.3 tùy độ mạnh nhạc
-                scaleBeat = 1 + (avg / 256) * 0.3;
-            } else {
-                // Nhịp đập mặc định khi chưa bật nhạc
-                scaleBeat = 1 + Math.sin(Date.now()*0.001 * 2.5)*0.05;
-            }
-
-            if(heartCloud) {
-                camera.position.x += (mouseX - camera.position.x) * 0.05;
-                camera.position.y += (-mouseY - camera.position.y) * 0.05;
-                camera.lookAt(scene.position);
-
-                heartCloud.rotation.y += 0.005;
-                // Áp dụng scaleBeat từ nhạc hoặc mặc định
-                heartCloud.scale.set(scaleBeat, scaleBeat, scaleBeat);
-            }
-
-            if(auraCloud) {
-                auraCloud.rotation.y -= 0.002;
-                auraCloud.rotation.z += 0.001;
-                // Aura cũng đập nhẹ theo nhạc nhưng trễ hơn xíu
-                auraCloud.scale.set(scaleBeat * 1.1, scaleBeat * 1.1, scaleBeat * 1.1);
-            }
-            if(stars) stars.rotation.z += 0.0005;
-
-            renderer.render(scene, camera);
-        }
-    </script>
+    <script id="three-library" async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="../static/memories.js"></script>
+    <script defer src="../static/app.js"></script>
+    <script defer src="../static/intro3d.js"></script>
 </body>
 </html>
