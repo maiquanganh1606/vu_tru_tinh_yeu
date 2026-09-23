@@ -1,5 +1,6 @@
 """Durable, leased outbox. Importing this module never sends a message."""
 import json
+import logging
 import secrets
 import smtplib
 import ssl
@@ -8,6 +9,9 @@ import urllib.request
 import certifi
 from email.message import EmailMessage
 from .db import connect
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def send_notification(config, wish):
@@ -62,6 +66,9 @@ def deliver_one(config, sender=send_notification, timestamp=None):
         status = 'failed' if row['attempts'] + 1 >= 8 else 'queued'
         next_attempt = now + min(3600, 30 * 2 ** row['attempts'])
         provider_id = None
+        LOGGER.warning('delivery attempt failed: status=%s failure=%s attempt=%s', status, failure, row['attempts'] + 1)
+    else:
+        LOGGER.info('delivery attempt succeeded: status=sent')
     with connect(config['DATABASE']) as db:
         db.execute('BEGIN IMMEDIATE')
         result = db.execute('UPDATE delivery_jobs SET lease_until=0,lease_token=NULL,next_attempt=?,last_error=?,provider_id=? WHERE wish_id=? AND lease_token=?',
