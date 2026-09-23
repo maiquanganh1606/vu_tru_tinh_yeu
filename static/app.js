@@ -88,9 +88,40 @@
     let heartClosing = false;
     const heartPanel = U.$('heart-focus');
     const heartButton = U.$('heart-open');
+    const heartBackdrop=heartPanel.querySelector('[data-heart-close]');
+    let heartGesture=null, suppressHeartClick=false;
+    const resetHeartPointer=()=>{heartGesture=null;U.scene.setHeartPointer(null);};
+    heartBackdrop.addEventListener('pointerdown',event=>{
+        if(!event.isPrimary||event.button!==0)return;
+        suppressHeartClick=false;
+        heartGesture={id:event.pointerId,x:event.clientX,y:event.clientY,dragged:false};
+        heartBackdrop.setPointerCapture(event.pointerId);
+        U.scene.setHeartPointer(event);
+    });
+    heartBackdrop.addEventListener('pointermove',event=>{
+        if(!event.isPrimary)return;
+        if(heartGesture){
+            if(heartGesture.id!==event.pointerId)return;
+            heartGesture.dragged ||= Math.hypot(event.clientX-heartGesture.x,event.clientY-heartGesture.y)>8;
+        }else if(event.pointerType!=='mouse')return;
+        U.scene.setHeartPointer(event);
+    });
+    heartBackdrop.addEventListener('pointerup',event=>{
+        if(!heartGesture||heartGesture.id!==event.pointerId)return;
+        suppressHeartClick=heartGesture.dragged||Math.hypot(event.clientX-heartGesture.x,event.clientY-heartGesture.y)>8;
+        resetHeartPointer();
+        if(heartBackdrop.hasPointerCapture(event.pointerId))heartBackdrop.releasePointerCapture(event.pointerId);
+    });
+    heartBackdrop.addEventListener('pointercancel',event=>{
+        if(heartGesture?.id===event.pointerId){suppressHeartClick=true;resetHeartPointer();}
+    });
+    heartBackdrop.addEventListener('lostpointercapture',()=>{if(heartGesture){suppressHeartClick=true;resetHeartPointer();}});
+    heartBackdrop.addEventListener('pointerleave',()=>{if(!heartGesture)U.scene.setHeartPointer(null);});
+    window.addEventListener('blur',resetHeartPointer);
     function openHeartFocus() {
         if (U.mode !== 'EXPLORE' || U.config.features.heartFocus === false) return;
         heartClosing = false;
+        resetHeartPointer();suppressHeartClick=false;
         U.scene.heartActive = true;
         U.scene.hover(null);
         U.setMode('HEART_TRANSITION');
@@ -109,6 +140,7 @@
     function closeHeartFocus() {
         if (heartClosing || !['HEART_TRANSITION', 'HEART_FOCUS'].includes(U.mode)) return;
         heartClosing = true;
+        resetHeartPointer();
         U.scene.heartActive = false;
         U.setMode('HEART_TRANSITION');
         heartPanel.classList.add('is-closing');
@@ -133,6 +165,7 @@
     U.$('heart-focus-title').textContent = U.config.couple || 'Quang Anh & Pé Nhi';
     U.$('heart-focus-close').addEventListener('click', closeHeartFocus);
     heartPanel.addEventListener('click', event => {
+        if(suppressHeartClick){suppressHeartClick=false;return;}
         if (event.target.matches('[data-heart-close]')) closeHeartFocus();
     });
     document.addEventListener('keydown', event => {
@@ -146,6 +179,7 @@
         const background = event.target === document.body || ['canvas-container', 'experience'].includes(event.target.id);
         if (U.mode === 'EXPLORE' && background) U.$('main-panel').classList.add('visible');
     });
+    U.puzzle.init();
     U.constellations.init();
     U.planets.init();
     U.capsule.init();

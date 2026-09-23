@@ -43,6 +43,13 @@
                 }
             }
         }
+        const heartBounds = {minX:Infinity,maxX:-Infinity,minY:Infinity,maxY:-Infinity};
+        for(let i=0;i<vertices.length;i+=3){
+            heartBounds.minX=Math.min(heartBounds.minX,vertices[i]);
+            heartBounds.maxX=Math.max(heartBounds.maxX,vertices[i]);
+            heartBounds.minY=Math.min(heartBounds.minY,vertices[i+1]);
+            heartBounds.maxY=Math.max(heartBounds.maxY,vertices[i+1]);
+        }
         // Area-weighted triangle sampling keeps both lobes and the notch evenly filled.
         const areas = [], a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
         let total = 0;
@@ -123,17 +130,18 @@
                     }
                     p.xy+=uPointer*uFocus*uMotion*2.*exp(-length(rest.xy/70.-uPointer));
                     float cyan=smoothstep(.46,.72,activity)*(.45+.55*smoothstep(-.2,.7,ribbon));
-                    vColor=mix(vec3(.85,.018,.17),vec3(.02,.8,1.),cyan);
+                    vColor=mix(vec3(.95,.035,.24),vec3(.02,.8,1.),cyan);
                     float core=(1.-smoothstep(9.,24.,length(rest*vec3(1.,1.,1.3))))*(1.-step(1.5,aLayer));
                     vColor=mix(vColor,vec3(1.,.94,1.),core);
-                    float filaments=.4+.6*pow(.5+.5*ribbon,3.);
-                    vLight=(aLayer<.5?.30: aLayer>1.5?.40:.52)*filaments*fade*(1.+uBeat*.5);
+                    // Lift the mantle between filaments so the heart reads above the pedestal.
+                    float filaments=.5+.5*pow(.5+.5*ribbon,3.);
+                    vLight=(aLayer<.5?.30: aLayer>1.5?.44:.72)*filaments*fade*(1.+uBeat*.5);
                     vLight+=core*.10;
                     vSpark=step(.996,fract(aSeed*13.17))*pow(max(0.,sin(t*1.3+aSeed)),24.);
                     if(uMotion<.5)vSpark=0.;
                     vec4 mv=modelViewMatrix*vec4(p+vec3(0.,12.,0.),1.);
                     gl_Position=projectionMatrix*mv;
-                    gl_PointSize=clamp((aSize+vSpark*9.)*uDpr*(1.+uFocus*.12)*480./max(1.,-mv.z),1.,22.);
+                    gl_PointSize=clamp((aSize*(aLayer>.5&&aLayer<1.5?1.08:1.)+vSpark*9.)*uDpr*(1.+uFocus*.12)*480./max(1.,-mv.z),1.,22.);
                 }`,
             fragmentShader:`
                 uniform float uOpacity,uGain;varying vec3 vColor;varying float vLight,vSpark;
@@ -152,6 +160,7 @@
         const points=new THREE.Points(geometry,material);points.frustumCulled=false;group.add(points);
         let count=70000;
         return {group,
+            bounds(){return {...heartBounds};},
             quality(level,dpr){
                 count=level==='light'?16000:level==='balanced'?35000:70000;
                 geometry.setDrawRange(0,count);uniforms.uDpr.value=dpr;

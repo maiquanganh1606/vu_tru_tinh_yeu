@@ -24,13 +24,12 @@
             const data=U.config.planets.find(p=>p.id===id);if(!data)return;
             selected=id;U.scene.hover(null);
             if(!U.scene.available){U.gallery.open(id);return;}
-            U.setMode('PLANET_TRANSITION');U.$('planet-detail').hidden=false;
+            U.setMode('PLANET_TRANSITION');U.$('planet-detail').hidden=true;
             U.$('planet-title').textContent=data.title;U.$('planet-description').textContent=[U.formatDate(data.date),data.description].filter(Boolean).join(' · ');
             U.$('planet-gallery').textContent=`Xem ${data.memoryIds.length} khung hình`;
-            U.$('planet-back').focus();
             U.scene.focus(id,()=>{
                 if(selected!==id)return;
-                U.setMode('PLANET_VIEW');
+                U.setMode('PLANET_VIEW');U.$('planet-detail').hidden=false;U.$('planet-back').focus();
                 const memories=data.memoryIds.slice(0,8).map(mid=>U.config.memories.find(m=>m.id===mid)).filter(Boolean);
                 U.$('orbit-photos').replaceChildren();
                 photos=memories.map((memory,index)=>{

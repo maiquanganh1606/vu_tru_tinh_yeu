@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="../static/intro.css">
 
-<link rel="stylesheet" href="../static/universe.css">
+<link rel="stylesheet" href="../static/universe.css?v=portal-infall-1">
 </head>
 <body class="intro-active">
     <section id="intro-overlay" aria-label="Mở đầu hành trình tình yêu">
@@ -52,6 +52,7 @@
         <nav class="action-bar" aria-label="Khám phá vũ trụ">
             <button class="action-btn" id="map-btn" type="button">Khám phá</button>
             <button class="action-btn" id="draw-stars-btn" type="button">Nối chòm sao</button>
+            <button class="action-btn" id="puzzle-open" type="button">Xếp hình ký ức</button>
             <button class="action-btn" id="music-btn" type="button" aria-pressed="false">♫ Bật nhạc</button>
             <button class="action-btn" id="mailbox-btn" type="button">Hộp thư</button>
             <button class="action-btn" id="quality-btn" type="button" aria-pressed="false">Hiệu ứng nhẹ</button>
@@ -79,13 +80,32 @@
 </div>
 <section id="constellation-panel" class="constellation-panel" hidden aria-label="Vẽ chòm sao">
     <div class="drawing-heading"><p class="eyebrow">VIẾT LỜI THƯƠNG LÊN BẦU TRỜI</p><h2>Nối những vì sao</h2><button id="constellation-close" class="text-button" type="button">← Về bầu trời</button></div>
+    <div id="constellation-difficulties" class="constellation-tabs" aria-label="Độ khó"></div>
     <div id="constellation-tabs" class="constellation-tabs"></div>
     <div id="constellation-board" class="constellation-board">
         <svg id="constellation-lines" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg><div id="constellation-points"></div>
     </div>
     <p id="constellation-progress" class="eyebrow"></p><p id="constellation-message" class="constellation-message" aria-live="polite"></p>
-    <div class="drawing-tools"><button id="constellation-undo" class="chip" type="button">Lùi một nét</button><button id="constellation-lift" class="chip" type="button">Nét mới</button><button id="constellation-reset" class="chip" type="button">Vẽ lại</button></div>
+    <div class="drawing-tools"><button id="constellation-reference" class="chip" type="button" aria-pressed="false">Xem đường mẫu</button><button id="constellation-hint" class="chip" type="button">Gợi ý</button><button id="constellation-sound" class="chip" type="button">Âm thanh</button><button id="constellation-undo" class="chip" type="button">Lùi một nét</button><button id="constellation-lift" class="chip" type="button">Nét mới</button><button id="constellation-reset" class="chip" type="button">Vẽ lại</button></div>
 </section>
+<div id="puzzle-panel" class="universe-modal" hidden role="dialog" aria-labelledby="puzzle-title">
+<section class="modal-card puzzle-card">
+<button id="puzzle-close" class="modal-close" type="button" aria-label="Đóng xếp hình">×</button>
+<p class="eyebrow">GHÉP LẠI MỘT CHÚT CHÚNG MÌNH</p><h2 id="puzzle-title">Xếp hình ký ức</h2>
+<div class="puzzle-toolbar"><button id="puzzle-sound" class="chip" type="button">Âm thanh</button><span>Kỷ lục lưu trên thiết bị này</span></div>
+<div id="puzzle-setup">
+<label for="puzzle-level">Độ khó</label><select id="puzzle-level"><option value="3">Dễ · 3 × 3</option><option value="4">Trung bình · 4 × 4</option><option value="5">Khó · 5 × 5</option><option value="6">Rất khó · 6 × 6</option></select>
+<div class="puzzle-toolbar"><button id="puzzle-random" class="chip" type="button">Ảnh ngẫu nhiên</button><button id="puzzle-start" class="primary-button" type="button">Bắt đầu</button></div>
+<p>Chọn một kỷ niệm. Chạm mảnh cạnh ô trống để trượt; có thể dùng phím mũi tên để di chuyển ô trống.</p><div id="puzzle-images" class="puzzle-images" aria-label="Chọn ảnh"></div>
+</div>
+<p id="puzzle-status" role="status"></p>
+<div id="puzzle-play" hidden>
+<div class="puzzle-stats"><span id="puzzle-time" aria-label="Thời gian">00:00.0</span><span id="puzzle-moves">0 nước</span><span id="puzzle-level-label"></span></div>
+<div class="puzzle-layout"><div class="puzzle-stage"><div id="puzzle-board" tabindex="0" role="group" aria-label="Bàn xếp hình. Phím mũi tên di chuyển ô trống."></div><div id="puzzle-curtain" hidden><p>Đã tạm dừng</p><button id="puzzle-resume" class="primary-button" type="button">Tiếp tục</button></div></div>
+<figure id="puzzle-reference"><img id="puzzle-reference-img" alt="Hình mẫu của ván chơi"><figcaption>Hình mẫu</figcaption></figure></div>
+<div class="puzzle-toolbar"><button id="puzzle-preview" class="chip" type="button" aria-pressed="true">Ẩn hình mẫu</button><button id="puzzle-pause" class="chip" type="button">Tạm dừng</button><button id="puzzle-restart" class="chip" type="button">Chơi lại</button><button id="puzzle-change" class="chip" type="button">Đổi ảnh / độ khó</button></div>
+<p id="puzzle-result" role="status"></p><p id="puzzle-record"></p>
+</div></section></div>
 <div id="map-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="map-title">
     <section class="modal-card"><button id="map-close" class="modal-close" type="button" aria-label="Đóng bản đồ">×</button><p class="eyebrow">CHỌN MỘT ĐIỂM ĐẾN</p><h2 id="map-title">Bản đồ của hai đứa</h2><p>Mỗi khung hình giữ lại một chút chúng mình.</p><div id="planet-menu" class="planet-menu"></div></section>
 </div>
@@ -119,13 +139,17 @@
 <script defer src="../static/universe/core.js"></script>
 <script defer src="../static/universe/audio.js"></script>
 <script defer src="../static/universe/camera.js"></script>
-<script defer src="../static/universe/planets.js"></script>
+<script defer src="../static/universe/planets.js?v=memory-orbs-3"></script>
+<script defer src="../static/universe/game-sound.js"></script>
+<script defer src="../static/universe/puzzle-engine.js"></script>
+<script defer src="../static/universe/sliding-puzzle.js"></script>
 <script defer src="../static/universe/constellations.js"></script>
 <script defer src="../static/universe/meteors.js"></script>
-<script defer src="../static/universe/capsule.js"></script>
+<script defer src="../static/universe/capsule.js?v=portal-infall-1"></script>
 <script defer src="../static/universe/wishes.js"></script>
 <script defer src="../static/universe/heart.js"></script>
-<script defer src="../static/universe/scene.js"></script>
+<script defer src="../static/universe/vortex.js"></script>
+<script defer src="../static/universe/scene.js?v=memory-orbs-3"></script>
 <script defer src="../static/app.js"></script>
 <script defer src="../static/intro-audio.js"></script>
 <script defer src="../static/intro3d.js"></script>

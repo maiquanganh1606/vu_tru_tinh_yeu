@@ -26,7 +26,7 @@ Album mặc định gồm tất cả ảnh, nhóm file Locket và nhóm file Mes
 ## Cấu trúc
 
 - `server/`: factory Flask, capsule, SQLite, outbox/delivery.
-- `static/universe/`: core/API/modal, camera, scene, audio, planets/gallery, constellations, meteors, wishes, capsule.
+- `static/universe/`: core/API/modal, camera, scene, audio, planets/gallery, constellations, meteors, wishes, capsule, heart và energy vortex.
 - `content/universe.json`: nội dung công khai, cờ tính năng, mẫu chòm sao.
 - `instance/`: dữ liệu riêng không vào git; cần volume bền vững khi deploy.
 - `scripts/build_thumbnails.py`, `configure_capsule.py`, `deliver_wishes.py`: công cụ vận hành.
@@ -90,3 +90,41 @@ Hồi quy M8.2: `tests/universe_v2.cjs` PASS desktop, touch mobile và reduced-m
 ## Chòm sao Song Tử
 
 Thêm mẫu `gemini` phiên bản 1, 14 điểm và 13 cạnh, cách điệu thành hai người sóng đôi nắm tay (không phải bản đồ thiên văn theo tọa độ sao). Có thông điệp khi hoàn thành và lưu tiến độ riêng. Thanh chọn chòm sao tự xuống dòng trên màn hình hẹp.
+
+## Energy Vortex M8.3 — lịch sử, đã được M8.4 thay thế (21/09/2026)
+
+### Đã triển khai
+
+- Thêm `static/universe/vortex.js` như một module hạt độc lập, dùng một `THREE.Points`, một geometry và một shader riêng.
+- Sinh 15.000 hạt có seed cố định với các thuộc tính `aRadius`, `aAngle`, `aPhase`, `aSeed` và `aSize`. Không cập nhật vị trí từng hạt trên CPU.
+- Vertex shader thực hiện ba giai đoạn liên tục: hội tụ từ rìa phễu, updraft xoắn theo trục Y và fade/respawn theo lifecycle.
+- Fragment shader dùng soft particle additive blending, chuyển màu cyan đậm → cyan sáng → trắng-cyan, kèm sparkle thưa.
+- `heart.js` cung cấp `bounds()` để scene neo vortex vào `minY` thực tế của trái tim thay vì dùng tọa độ hard-code.
+- `scene.js` truyền chung `elapsed`, `beat`, `heartMix`, pointer và opacity cho cả heart/vortex. Khi beat đạt đỉnh, vortex tăng tốc xoay và độ sáng theo cùng xung lực của trái tim.
+- Vortex đi theo chóp tim khi mở Heart Focus; đã nhận pointer chuột/cảm ứng/bút và giảm strength theo thời gian. Audit ngày 22/09 xác định vị trí pointer chưa được làm mượt và mapping sang mặt phẳng bệ cần sửa ở M8.4.
+- Đồng bộ quality hiện có: 15.000 hạt ở High, 8.000 ở Balanced, 4.000 ở Light/reduced-motion. Vortex nằm trong resource owner của scene và được dọn khi WebGL mất hoặc trang đóng.
+- Thêm feature flag `features.energyVortex` và cập nhật snapshot `static/memories.js`.
+- Thêm kiểm thử browser `tests/energy_vortex.cjs` cho anchor, focus pointer, quality và reduced motion.
+
+### Cần xác nhận trước khi phát hành
+
+- Chạy `node tests/energy_vortex.cjs` cùng bộ browser tests hiện có trên máy có Node.js, Playwright và Chrome.
+- Chụp và xem lại desktop 1440×960, touch 390×844, reduced motion và có/không có audio để hiệu chỉnh bán kính, chiều cao, opacity và độ trắng ở lõi.
+- Đo frame time/GPU thật trên thiết bị di động; mục tiêu là không tăng quá một draw call và giữ p95 dưới 20 ms desktop, 25 ms mobile.
+- `scripts/build_thumbnails.py` cần môi trường có Pillow nếu muốn tái tạo toàn bộ thumbnail; snapshot cấu hình hiện đã được cập nhật bằng `image_catalog.py`.
+
+## M8.4 — Bệ năng lượng theo video, đã triển khai (22/09/2026)
+
+Thay thiết kế M8.3 bằng đĩa hạt bền vững có lõi cyan trắng, các cung sáng hở và ít bụi nối vào chóp tim. `vortex.js` sinh ba lớp hạt xen kẽ 80/10/10 và một mesh ribbon; High/Balanced 15k/8k + 8/4 cung (2 draw calls), Light 4k và tắt ribbon (1 draw call). Không thêm bloom hoặc texture.
+
+`scene.js` dùng heart bounds và scale bố cục để neo bệ, dự phòng khoảng hở khi beat, giữ elip thấp; chỉnh focus framing và cập nhật profile khi resize. Clock tích phân vận tốc thay `time × beat`, pointer chuyển qua ray-plane/local và smoothing có giới hạn. `app.js` phân biệt kéo/chạm trên backdrop bằng pointer capture; CSS đưa nút mở xuống dưới bệ và giới hạn touch-action ở backdrop. Reduced motion tắt clock/beat/deformation; visibility reset delta để tiếp tục không cộng bù khoảng nghỉ.
+
+Kiểm chứng: `energy_vortex.cjs`, `heart_focus.cjs`, `universe_v2.cjs`, `universe_resilience.cjs` PASS. Có touch/pen CDP thực, đa chạm/cancel, profile/resource IDs, 5/60/600 giây clock mô phỏng ở 30/60/120 Hz, ROI tĩnh pixel-identical, tắt feature flag, file preview và fallback/context loss. Syntax và diff whitespace đã kiểm tra.
+
+Ảnh/clip và JSON số đo nằm trong `output/playwright/vortex-*`; ảnh so sánh lưu trong `docs/assets/energy-vortex-upgrade-*.jpg`. Chrome headless trên Apple M1 Pro: rAF p95 16,7–16,8 ms cho desktop và viewport touch 390×844, có/không nhạc. GPU timer p95 khi bật nhạc: 2,66 ms desktop, 0,67 ms viewport mobile. Toàn cảnh focus 15 calls/14 geometry/1 texture; tăng một call/geometry so baseline M8.3, số điểm giữ nguyên. Chưa đo GPU baseline hay thiết bị di động thật.
+
+[Kế hoạch và bằng chứng chi tiết](ENERGY_VORTEX_UPGRADE_PLAN.md). M8.4a–d hoàn tất, M8.4e đã qua trên Chrome/macOS và còn nghiệm thu Safari iOS/Chrome Android trước phát hành. Burst xuất hiện là tùy chọn chưa bật. Chưa deploy. Các mục M8.3 phía trên được giữ làm lịch sử và đã được M8.4 thay thế.
+
+### Tinh chỉnh cân bằng ánh sáng (22/09/2026)
+
+Tăng sáng mantle/hồng và kích thước hạt thân tim 8%; giảm độ sáng, độ phủ lõi vortex và flash theo beat để tim nổi bật hơn bệ. Số hạt và draw calls giữ nguyên. Xem ảnh desktop/mobile/Light ở `output/playwright/light-balance-*.png`; `heart_focus.cjs` và `energy_vortex.cjs` chạy lại PASS. Ảnh trước/sau lưu tại `docs/assets/heart-vortex-light-balance.jpg`.

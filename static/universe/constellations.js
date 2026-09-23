@@ -1,5 +1,7 @@
 (() => {
     const U = window.Universe, ns = 'http://www.w3.org/2000/svg';
+    const levels={easy:'Dễ',medium:'Trung bình',hard:'Khó','very-hard':'Rất khó'};
+    let difficulty='easy', hints=0, hinted=null, reference=false;
     let pattern, previousMode, completed = new Set(), history = [], current = null, pointer = null, announced = false, pointerStart = null, dragged = false;
     const key = (a, b) => [a, b].sort((x, y) => x - y).join('-');
     const svg = () => U.$('constellation-lines');
@@ -10,19 +12,22 @@
             const line = document.createElementNS(ns, 'line');
             line.setAttribute('x1', pattern.points[a][0] * 1000); line.setAttribute('y1', pattern.points[a][1] * 1000);
             line.setAttribute('x2', pattern.points[b][0] * 1000); line.setAttribute('y2', pattern.points[b][1] * 1000);
-            line.setAttribute('class', completed.has(key(a, b)) ? 'joined' : 'guide'); svg().append(line);
+            line.setAttribute('class', completed.has(key(a, b)) ? 'joined' : 'guide');
+            const visible=reference || difficulty==='easy' || difficulty==='medium' || hinted===key(a,b) || (difficulty==='hard' && (a===current || b===current));
+            line.style.visibility=completed.has(key(a,b)) || visible ? 'visible':'hidden';svg().append(line);
         }
         const done = completed.size === pattern.edges.length;
         const next = pattern.edges.find(([a,b]) => !completed.has(key(a,b)) && (current === null || a === current || b === current));
         U.$('constellation-points').querySelectorAll('button').forEach((button, i) => {
-            button.classList.toggle('selected', i === current); button.classList.toggle('suggested', Boolean(next?.includes(i)));
+            button.classList.toggle('selected', i === current); button.classList.toggle('suggested', Boolean((difficulty==='easy' && next?.includes(i)) || hinted?.split('-').map(Number).includes(i)));
             button.setAttribute('aria-pressed', String(i === current));
         });
-        U.$('constellation-progress').textContent = `${completed.size} / ${pattern.edges.length} nét sao`;
+        U.$('constellation-progress').textContent = `${levels[difficulty]} · ${completed.size} / ${pattern.edges.length} nét sao`;
         U.$('constellation-message').textContent = done ? pattern.message : 'Chọn một sao, rồi nối đến sao sáng bên cạnh. Nhấc tay để bắt đầu nét mới.';
         U.$('constellation-board').classList.toggle('complete', done);
         if (done && !announced) { U.announce(pattern.message); announced = true; }
         if (!done) announced = false;
+        U.$('constellation-hint').textContent=`Gợi ý (${hints})`;U.$('constellation-hint').disabled=hints===0 || done;
         store();
     }
     function select(index) {
@@ -32,7 +37,7 @@
             if (!pattern.edges.some(([a,b]) => key(a,b) === edge)) {
                 current = index; draw(); return;
             }
-            if (!completed.has(edge)) { completed.add(edge); history.push(edge); }
+            if (!completed.has(edge)) { completed.add(edge); history.push(edge);hinted=null;U.gameSound.play();if(completed.size===pattern.edges.length)U.gameSound.play(true); }
         }
         current = index; draw();
     }
@@ -51,6 +56,7 @@
         const valid = new Set(pattern.edges.map(([a,b]) => key(a,b)));
         const saved = U.read('constellation:' + pattern.id + ':' + pattern.version, []);
         completed = new Set((Array.isArray(saved) ? saved : []).filter(x => valid.has(x)));
+        hints=difficulty==='easy'?99:difficulty==='medium'?3:1;hinted=null;reference=false;U.$('constellation-reference').setAttribute('aria-pressed','false');
         history = [...completed]; current = null; pointer = null; announced = false;
         const points = U.$('constellation-points'); points.replaceChildren();
         pattern.points.forEach(([x,y], i) => {
@@ -61,8 +67,14 @@
         U.$('constellation-tabs').querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.pattern === id)));
         draw();
     }
+    function soundLabel(){U.$('constellation-sound').textContent=U.gameSound.enabled?'♪ Âm thanh: bật':'♪ Âm thanh: tắt';U.$('constellation-sound').setAttribute('aria-pressed',String(U.gameSound.enabled));}
+    function setDifficulty(id){difficulty=id;const available=U.config.constellations.filter(p=>(p.difficulty||'easy')===id);U.$('constellation-tabs').querySelectorAll('button').forEach(b=>b.hidden=!available.some(p=>p.id===b.dataset.pattern));U.$('constellation-difficulties').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.difficulty===id)));choose(available[0].id);}
     U.constellations = {
         init() {
+            for(const [id,label] of Object.entries(levels)){const b=U.button(label,()=>setDifficulty(id),'chip');b.dataset.difficulty=id;U.$('constellation-difficulties').append(b);}
+            U.$('constellation-hint').onclick=()=>{if(!hints)return;const edge=pattern.edges.find(([a,b])=>!completed.has(key(a,b)));if(edge){hinted=key(...edge);hints--;U.announce(`Nối sao ${edge[0]+1} với sao ${edge[1]+1}`);draw();}};
+            U.$('constellation-reference').onclick=()=>{reference=!reference;U.$('constellation-reference').setAttribute('aria-pressed',String(reference));draw();};
+            U.$('constellation-sound').onclick=()=>{U.gameSound.toggle();soundLabel();};
             for (const p of U.config.constellations) {
                 const button = U.button(p.title, () => choose(p.id), 'chip'); button.dataset.pattern = p.id;
                 U.$('constellation-tabs').append(button);
@@ -94,7 +106,7 @@
         open() {
             if (U.mode !== 'EXPLORE') return;
             previousMode = U.mode; U.modal.open('constellation-panel'); U.setMode('CONSTELLATION_DRAW');
-            choose(U.config.constellations[0].id); U.$('constellation-close').focus();
+            setDifficulty(difficulty);soundLabel(); U.$('constellation-close').focus();
         },
         close() {
             pointer = null; current = null; U.modal.close('constellation-panel'); U.$('draw-stars-btn').focus();

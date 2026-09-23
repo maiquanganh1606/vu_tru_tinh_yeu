@@ -124,6 +124,7 @@ node tests/intro_cinematic.cjs
 node tests/intro_audio.cjs
 node tests/universe_v2.cjs
 node tests/heart_focus.cjs
+node tests/energy_vortex.cjs
 node tests/universe_resilience.cjs
 ```
 

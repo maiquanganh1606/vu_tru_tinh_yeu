@@ -20,14 +20,64 @@ body:not([data-mode=EXPLORE]) .sky-controls,body:not([data-mode=EXPLORE]) .porta
 @media(max-width:650px){.main-panel.glass-panel{top:24px;left:28px;max-width:calc(100vw - 48px)}.main-panel .couple-names{font-size:2.15rem}.main-panel .eyebrow{font-size:9px;margin-bottom:10px}.main-panel #timer{font-size:10px}.main-panel #typewriter{font-size:11px;max-width:280px;line-height:1.5}.main-panel .hide-ui-btn{left:auto;right:-18px;top:-8px;font-size:18px}.sky-brand{left:20px;top:20px}.sky-note{display:none}.portal-button{bottom:auto;top:170px;right:18px;font-size:10px;padding:0}.portal-button small{display:none}.portal-ring{width:30px;height:30px}.sky-controls{bottom:max(12px,env(safe-area-inset-bottom))}.sky-hint{font-size:10px;margin-bottom:11px}.action-bar{padding:4px;gap:0;max-width:96%;border-radius:25px;flex-wrap:wrap}.action-btn{font-size:10px;padding:8px 9px;min-height:44px}.sky-shortcuts{margin-top:3px}.planet-label{padding:7px 9px;max-width:180px;min-width:0;gap:5px}.planet-name{font-size:10px}.planet-count{font-size:9px}.planet-detail{left:22px;bottom:26px;width:calc(100% - 44px);max-width:none;text-align:center;background:#0e0a18c9;border:1px solid var(--line);border-radius:18px;padding:14px}.planet-detail .text-button{margin:0}.planet-detail h2{font-size:29px}.planet-detail p:not(.eyebrow){font-size:12px;margin:8px}.planet-detail .eyebrow{display:none}.planet-detail .primary-button{padding:9px 14px;font-size:12px}.orbit-photos{inset:29% 14px auto;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;height:34dvh;overflow:auto;padding:10px}.orbit-photo{position:static;translate:none;width:66px;height:80px;padding:3px 3px 10px;flex-shrink:0}.universe-modal,#gallery-overlay,#mailbox-overlay{padding:12px}.modal-card{padding:26px 22px;max-height:calc(100dvh - 24px);border-radius:20px}.modal-card h2{font-size:30px}.gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.photo-card img{height:155px}.mailbox-grid{gap:8px}.mail-item{padding:16px 12px}.mail-content,.mail-title{font-size:13px}.constellation-panel{padding:22px 12px 14px}.drawing-heading .eyebrow{font-size:9px;padding-top:32px}.drawing-heading .text-button{top:-8px;left:10px;font-size:12px}.drawing-heading h2{font-size:31px}.constellation-board{height:min(43dvh,370px);width:94vw;margin-top:8px}.constellation-message{font-size:12px;max-width:330px}.drawing-tools .chip{font-size:12px;padding:9px 13px}.lightbox-nav{gap:10px}.no-webgl #planet-labels{inset:32% 8% auto;gap:12px}.no-webgl .planet-label{min-width:200px;min-height:60px}.no-webgl .portal-button{top:150px}.no-webgl .planet-count{display:block}}
 @media(prefers-reduced-motion:reduce){.orbit-photo:hover{transform:none}.portal-ring{transition:none}}
 /* Heart focus stays transparent over the live scene; only the edges dim. */
-.heart-focus-backdrop{backdrop-filter:none;background:radial-gradient(ellipse at 50% 35%,transparent 20%,#07050f33 65%,#03030b99 100%)}
+.heart-focus-backdrop{touch-action:none;backdrop-filter:none;background:radial-gradient(ellipse at 50% 35%,transparent 20%,#07050f33 65%,#03030b99 100%)}
 .heart-focus-content{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:0;width:100%;margin:0;padding:18px 20px;background:linear-gradient(transparent,#080612e6 65%)}
 .heart-focus-content h1{font-size:clamp(2.4rem,5.5vw,4.8rem)}
 .heart-focus.is-closing .heart-focus-content{animation:none;opacity:0;transition:opacity .35s}
 .heart-focus-active #show-panel{visibility:hidden}
-.heart-open{position:absolute;left:50%;top:62%;translate:-50% 0;z-index:6;border:1px solid #e8b4d038;border-radius:25px;background:#100c1a99;color:var(--rose);padding:9px 16px;font-size:13px;min-height:44px}
+.heart-open{position:absolute;left:50%;top:74%;translate:-50% 0;z-index:6;border:1px solid #e8b4d038;border-radius:25px;background:#100c1a99;color:var(--rose);padding:9px 16px;font-size:13px;min-height:44px}
 .heart-open span{margin-left:6px}.heart-open:hover{box-shadow:0 0 26px #e86dbe44}.heart-focus-active .heart-open,body:not([data-mode=EXPLORE]) .heart-open{visibility:hidden}
 .heart-fallback{display:none}.no-webgl .heart-fallback{display:block;position:absolute;top:8%;left:50%;translate:-50% 0;font:clamp(160px,35vh,330px)/1 Georgia;color:#d51c60;text-shadow:0 0 18px #ff438c66,0 0 50px #bd3e9155;animation:heart-focus-copy-in .5s both}
-@media(max-width:650px){.heart-focus-content{bottom:12px;padding:14px 18px}.heart-focus-content h1{font-size:clamp(2rem,10vw,3rem)}.heart-focus-timer{font-size:12px;line-height:1.8;letter-spacing:.04em}.heart-focus-message{font-size:12px;margin:10px 0 16px}.heart-focus-content .eyebrow{font-size:9px}.heart-open{top:61%;font-size:11px}.no-webgl .heart-open{top:65%}}
+@media(max-width:650px){.heart-focus-content{bottom:12px;padding:14px 18px}.heart-focus-content h1{font-size:clamp(2rem,10vw,3rem)}.heart-focus-timer{font-size:12px;line-height:1.8;letter-spacing:.04em}.heart-focus-message{font-size:12px;margin:10px 0 16px}.heart-focus-content .eyebrow{font-size:9px}.heart-open{top:74%;font-size:11px}.no-webgl .heart-open{top:65%}}
 @media(max-height:550px){.heart-focus-content{left:auto;right:2%;width:48%;bottom:10px}.heart-focus-content h1{font-size:2rem}.heart-focus-content .eyebrow,.heart-focus-message{display:none}}
 @media(prefers-reduced-motion:reduce){.heart-focus-content,.heart-focus-backdrop,.no-webgl .heart-fallback{animation-duration:.12s;animation-delay:0s}.heart-focus.is-closing .heart-focus-content{transition:none}}
+/* On short landscape screens, keep navigation below the pedestal. */
+@media(min-width:651px) and (max-height:550px){.sky-controls{bottom:8px;display:flex;align-items:center;justify-content:center;gap:12px}.sky-hint{display:none}.sky-shortcuts{margin-top:0}.heart-open{left:auto;right:18px;top:auto;bottom:84px;translate:none}}
+
+/* The existing time capsule gathers a small, continuous stream of nearby stars. */
+.portal-button{gap:9px;color:#f6dfef;text-shadow:0 0 15px #dd95ff66}
+.portal-ring{position:relative;isolation:isolate;width:58px;height:58px;margin:18px 20px 14px;border:1px solid #fff0ffb3;background:#020209;transform:rotate(-24deg) scaleY(.72);box-shadow:0 0 9px #ffd3ef99,0 0 24px #bb75ed88,0 0 52px #945acc44,inset 0 0 8px #bb78d955;transition:transform .5s,box-shadow .5s;pointer-events:none}
+.portal-ring:before{content:'';position:absolute;inset:-9px;border-radius:50%;background:conic-gradient(from 0deg,transparent 5%,#bc88ff33 18%,#ffe2f7 28%,transparent 42%,#a775eb33 62%,#f2b4dc 78%,transparent 94%);mask:radial-gradient(transparent 57%,#000 61%,#000 65%,transparent 72%);animation:portal-accretion 9s linear infinite;pointer-events:none}
+.portal-ring:after{content:'';position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle,#010106 65%,#271533);box-shadow:inset 0 0 7px #130c25;z-index:2;pointer-events:none}
+.portal-infall{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--angle));pointer-events:none}
+.portal-star{display:block;position:absolute;width:3px;height:3px;left:-1.5px;top:-1.5px;border-radius:50%;background:#ffe5f6;box-shadow:0 0 5px #ffd9f7,0 0 10px #c599fa;animation:portal-infall var(--duration) var(--delay) linear infinite;pointer-events:none}
+.portal-infall:nth-child(3n) .portal-star{width:2px;height:2px;background:#c2d9ff}
+.portal-button:is(:hover,:focus-visible,:active) .portal-ring{transform:rotate(-10deg) scaleY(.84) scale(1.08);box-shadow:0 0 12px #ffe4facc,0 0 35px #ce8cf9aa,0 0 64px #aa63de66,inset 0 0 9px #d292ec66}
+.portal-button:is(:hover,:focus-visible,:active) .portal-star{filter:brightness(1.7);width:4px;height:4px}
+@keyframes portal-accretion{to{rotate:360deg}}
+@keyframes portal-infall{0%{transform:rotate(0deg) translateX(var(--reach)) scale(.5);opacity:0}15%{opacity:.85}65%{opacity:1}100%{transform:rotate(290deg) translateX(8px) scale(.15);opacity:0}}
+body:not([data-mode=EXPLORE]) .portal-ring:before,body:not([data-mode=EXPLORE]) .portal-star{animation-play-state:paused}
+.light-effects .portal-infall:nth-child(n+9){display:none}
+@media(max-width:650px){.portal-button{right:18px;gap:5px}.portal-ring{width:38px;height:38px;margin:12px 10px 9px}.portal-infall{scale:.7}}
+@media(prefers-reduced-motion:reduce){.portal-ring{transition:none}.portal-ring:before,.portal-star{animation:none}.portal-star{transform:translateX(var(--reach));opacity:.65}.portal-button:is(:hover,:focus-visible,:active) .portal-ring{transform:rotate(-24deg) scaleY(.72)}}
+/* Mini games share the existing modal/focus boundary. */
+.puzzle-card{width:min(100%,1000px)}.puzzle-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0}.puzzle-toolbar>span{font-size:12px;color:var(--muted)}.puzzle-card select{background:#21182b;color:#f4eaf5;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:44px;width:100%;font-size:16px}.puzzle-images{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;max-height:40dvh;overflow:auto;padding:4px}.puzzle-photo{border:2px solid transparent;border-radius:10px;padding:3px;background:#21182b}.puzzle-photo[aria-pressed=true]{border-color:var(--mint);box-shadow:0 0 12px #bde3d833}.puzzle-photo img{display:block;width:100%;height:90px;object-fit:cover;border-radius:6px}.puzzle-stats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--mint);font:16px 'Share Tech Mono',monospace;margin:16px 0}.puzzle-layout{display:flex;gap:24px;align-items:flex-start}.puzzle-stage{position:relative;flex:1;min-width:0;max-width:560px}#puzzle-board{display:grid;grid-template-columns:repeat(var(--size),1fr);grid-template-rows:repeat(var(--size),1fr);gap:0;background:#090610;border:0;border-radius:12px;overflow:hidden;width:100%;outline:2px solid #cfadc34d;outline-offset:0}.puzzle-tile{position:relative;border:0;border-radius:0;padding:0;min-width:0;min-height:44px;background-repeat:no-repeat;cursor:pointer;touch-action:manipulation;box-shadow:inset -1px -1px 0 #090610}.puzzle-tile:hover{filter:brightness(1.12)}.tile-number{position:absolute;bottom:3px;right:3px;background:#120d1ccc;color:#fff;border-radius:4px;font:10px system-ui;padding:1px 4px}.puzzle-empty{background:radial-gradient(ellipse,#302137,#0c0811)}#puzzle-reference{margin:0;width:28%;min-width:110px}#puzzle-reference-img{display:block;width:100%;height:auto;object-fit:contain;border-radius:10px}#puzzle-reference figcaption{color:var(--muted);font-size:12px;text-align:center;padding:8px}#puzzle-curtain{position:absolute;inset:0;background:#15101e;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:12px}#puzzle-curtain[hidden],#puzzle-play[hidden],#puzzle-setup[hidden],#puzzle-reference[hidden],.constellation-tabs button[hidden]{display:none}.drawing-tools{flex-wrap:wrap;justify-content:center}#constellation-difficulties{margin-bottom:10px}.constellation-board{height:auto;aspect-ratio:1;width:min(82vw,620px)}.constellation-panel{justify-content:flex-start}.constellation-board{flex-shrink:0}.constellation-tabs{flex-shrink:0}
+@media(max-width:650px){.puzzle-card{padding:26px 12px}.puzzle-layout{flex-direction:column;gap:12px}.puzzle-stage{width:100%}#puzzle-reference{width:100%;max-width:150px;align-self:center}.puzzle-stats{font-size:13px}.puzzle-images{grid-template-columns:repeat(3,1fr)}.puzzle-toolbar .chip{padding:9px 11px;font-size:12px}.constellation-board{width:94vw;min-width:0}.drawing-tools{padding-bottom:env(safe-area-inset-bottom)}}
+
+/* Keep the active puzzle in one viewport instead of making the player scroll. */
+.puzzle-card{max-height:calc(100dvh - 24px);overflow:hidden;padding:24px clamp(18px,3vw,38px)}
+.puzzle-card #puzzle-play{min-height:0}
+.puzzle-card #puzzle-play > .puzzle-toolbar{margin:10px 0 0}
+.puzzle-layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(96px,25%,190px);gap:clamp(12px,2vw,24px);align-items:center;min-height:0}
+.puzzle-stage{width:min(100%,calc(100dvh - 360px));max-width:560px;justify-self:center}
+#puzzle-board{max-height:calc(100dvh - 360px)}
+#puzzle-reference{width:100%;min-width:0;max-width:190px;justify-self:center}
+#puzzle-reference-img{max-height:calc(100dvh - 330px)}
+.puzzle-stats{margin:8px 0;font-size:clamp(13px,1.5vw,16px)}
+.puzzle-card #puzzle-status{margin:4px 0;font-size:12px;line-height:1.35}
+.puzzle-card #puzzle-result,.puzzle-card #puzzle-record{margin:7px 0 0;font-size:12px;line-height:1.35}
+@media(max-width:650px){
+    .puzzle-card{padding:18px 12px;border-radius:16px}
+    .puzzle-card h2{font-size:27px;margin-bottom:8px}
+    .puzzle-card > .puzzle-toolbar{margin:5px 0 8px}
+    .puzzle-layout{grid-template-columns:minmax(0,1fr) 88px;gap:10px}
+    .puzzle-stage{width:100%;max-width:none}
+    #puzzle-board{max-height:none}
+    #puzzle-reference{width:88px;max-width:88px;align-self:center}
+    #puzzle-reference-img{max-height:none}
+    #puzzle-reference figcaption{font-size:10px;padding:4px 0}
+    .puzzle-stats{margin:5px 0;font-size:12px;gap:5px}
+    .puzzle-card #puzzle-play > .puzzle-toolbar{gap:4px;margin-top:8px}
+    .puzzle-card #puzzle-play > .puzzle-toolbar .chip{padding:7px 8px;min-height:38px;font-size:11px}
+    .puzzle-card #puzzle-result,.puzzle-card #puzzle-record{font-size:11px;margin-top:4px}
+}

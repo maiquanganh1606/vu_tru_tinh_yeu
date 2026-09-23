@@ -32,6 +32,21 @@
     }
     U.capsule = {
         init() {
+            const ring = U.$('capsule-open').querySelector('.portal-ring');
+            // Decorative stars share the existing portal's centre and never intercept clicks.
+            if (ring && !ring.childElementCount) {
+                for (let i = 0; i < 16; i++) {
+                    const orbit = document.createElement('span');
+                    orbit.className = 'portal-infall';
+                    orbit.style.setProperty('--angle', `${i * 137.5}deg`);
+                    orbit.style.setProperty('--delay', `${-i * .43}s`);
+                    orbit.style.setProperty('--duration', `${4.8 + i % 5 * .65}s`);
+                    orbit.style.setProperty('--reach', `${46 + i % 4 * 9}px`);
+                    const star = document.createElement('span');
+                    star.className = 'portal-star';
+                    orbit.append(star); ring.append(orbit);
+                }
+            }
             U.$('capsule-open').onclick = () => U.capsule.open(); U.$('capsule-close').onclick = () => U.modal.close('capsule-overlay');
             U.$('capsule-form').addEventListener('submit', async event => {
                 event.preventDefault(); const button = U.$('capsule-submit'); if (button.disabled) return;

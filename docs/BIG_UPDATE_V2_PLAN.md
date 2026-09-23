@@ -2,6 +2,8 @@
 
 Ngày lập: 21/09/2026. Trạng thái: bản 2.0 và M8 Heart Focus đã được tích hợp trong workspace; chưa phát hành. Phần hiện trạng bên dưới ghi lại baseline ở commit `59efeab`. Ước lượng bên dưới là dự kiến, không phải lịch giao hàng đã cam kết.
 
+Cập nhật 22/09/2026: M8.4 đã triển khai theo video `heart.mp4`, qua kiểm thử Chrome và có ảnh/clip, số đo rAF/GPU. [Kết quả chi tiết](ENERGY_VORTEX_UPGRADE_PLAN.md#11-kết-quả-triển-khai-m84--22092026). Còn nghiệm thu điện thoại thật trước phát hành.
+
 ## 1. Định hướng sản phẩm
 
 Biến trang kỷ niệm thành một nơi Pé Nhi có thể khám phá: ghé từng hành tinh để nhớ lại chuyện cũ, nối sao để nhận lời yêu, bắt sao băng để gửi mong muốn và mở một lá thư khi tương lai đến đúng hẹn. Âm nhạc kết nối toàn bộ trải nghiệm.
@@ -301,7 +303,7 @@ Các con số sau là **mục tiêu cần đo**, chưa phải kết quả benchm
 
 **Quan hệ phụ thuộc:** M0 → M1; M2/M3/M4 cần nền M1; M5 cần quyết định host, dữ liệu riêng và ngày mở; M6 cần state của M1 và tầng lưu trữ/phiên từ M5. M8 cần nền tảng M1 và cảnh trái tim M2; thực hiện M8 trước nghiệm thu phát hành M7. M7 chỉ bắt đầu nghiệm thu đầy đủ khi năm tính năng và M8 đã tích hợp. Có thể chuẩn bị nội dung và dịch vụ nhận trong lúc phát triển phần hình ảnh.
 
-Chia thay đổi theo các mốc thành những PR nhỏ, mỗi PR có thể chạy và kiểm thử. Dùng cờ `audioReactive`, `memoryPlanets`, `constellations`, `timeCapsule`, `shootingWishes`, `heartFocus` để tích hợp dần và tắt riêng phần lỗi. Đây là điều khiển phát hành, không phải cơ chế bảo mật.
+Chia thay đổi theo các mốc thành những PR nhỏ, mỗi PR có thể chạy và kiểm thử. Dùng cờ `audioReactive`, `memoryPlanets`, `constellations`, `timeCapsule`, `shootingWishes`, `heartFocus`, `energyVortex` để tích hợp dần và tắt riêng phần lỗi. Đây là điều khiển phát hành, không phải cơ chế bảo mật.
 
 ### Chi tiết M8 — Heart Focus (đã tích hợp)
 
@@ -380,3 +382,29 @@ Các kiểm thử trên là công việc cần thực hiện khi triển khai. L
 - Một nhịp co–đập chính–đập phụ–nghỉ điều khiển scale và năng lượng; audio beat tăng nhẹ cường độ. Focus và con trỏ ảnh hưởng dòng chảy. Giảm chuyển động giữ trạng thái hạt ổn định.
 - Desktop mặc định 70k, mobile 35k, light/reduced 16k; các lớp xen kẽ để draw range vẫn giữ toàn bộ cấu trúc. Khi khung hình >25 ms kéo dài, hạ về light ở cả EXPLORE và HEART_FOCUS; người dùng có thể chọn lại mức đầy đủ qua nút chất lượng.
 - Xác minh shader/runtime, point-only, timer/focus, đóng nhanh, resize, mất WebGL và tái sử dụng GPU bằng tests/heart_focus.cjs. 60 FPS trên điện thoại thật là mục tiêu cần đo trên thiết bị, không phải cam kết từ viewport mô phỏng.
+
+### M8.3 — Energy Vortex (lịch sử, đã được M8.4 thay thế)
+
+- Thêm module độc lập `static/universe/vortex.js` với một `THREE.Points`, seed cố định và tối đa 15.000 hạt. Vòng đời GPU gồm hội tụ vào tâm, updraft xoắn vào tim và fade/respawn.
+- Neo hình học theo `heart.bounds().minY`, truyền bán kính/chiều cao theo scale hiện tại của tim để không phụ thuộc tọa độ hard-code khi mở Heart Focus hoặc đổi viewport.
+- Dùng chung `uTime`, `uBeat`, `uFocus` và pointer với Cosmic Energy Heart. Beat làm tốc độ xoay tăng tối đa khoảng hai lần và lõi cyan trắng sáng hơn.
+- Fragment shader dùng additive soft particles, dải cyan đậm → trắng-cyan và sparkle thưa. Opacity giảm theo lifecycle và độ cao để không vượt qua nóc tim.
+- Quality: 15k High, 8k Balanced, 4k Light/reduced-motion; không thêm texture hoặc cập nhật buffer hạt trên CPU. Resource được dọn cùng scene khi mất WebGL.
+- Feature flag `energyVortex` đã thêm vào `content/universe.json` và snapshot `static/memories.js`. Pointer chuột/cảm ứng/bút chỉ bẻ cong luồng trong Heart Focus.
+- Test mới: `tests/energy_vortex.cjs` kiểm tra point-only, neo theo focus, pointer force, quality và reduced motion.
+- Còn lại: chạy browser test trên môi trường có Node/Playwright/Chrome, xem screenshot mỹ thuật và đo GPU trên thiết bị di động trước khi đưa vào điều kiện phát hành.
+
+### M8.4 — Bệ năng lượng theo video tham chiếu (đã triển khai, kiểm chứng Chrome)
+
+Chi tiết thiết kế, ảnh trước/sau và kết quả: [ENERGY_VORTEX_UPGRADE_PLAN.md](ENERGY_VORTEX_UPGRADE_PLAN.md).
+
+- [x] **M8.4a — Bố cục:** bệ elip thấp, bán kính theo layout, gap dự phòng beat, nghiêng theo camera; điều chỉnh Heart Focus và vị trí nút mở để bệ không bị UI che. Đã xem ảnh desktop/mobile dọc/ngang Explore/Focus.
+- [x] **M8.4b — Chuyển động:** đĩa orbit/lõi ổn định, feed ngắn taper/fade, clock tích phân; kiểm chứng cùng nhịp sau 5/60/600 giây mô phỏng ở 30/60/120 Hz.
+- [x] **M8.4c — Ánh sáng:** cyan trắng, glow bằng hạt, 8/4 cung sáng hở trong một mesh ribbon; không dùng bloom toàn cảnh. Giữ 15k/8k/4k hạt; vortex có tối đa 2 draw calls, Light 1.
+- [x] **M8.4d — Input:** ray-plane mapping, damping, primary touch/pen, drag không đóng focus, cancel/blur/leave; reduced motion pixel-identical và tiếp tục clock khi bật lại.
+- [x] **M8.4e — Máy phát triển:** energy_vortex, heart_focus, universe_v2, universe_resilience đều PASS. Có ảnh/clip và benchmark; tài nguyên ổn định. Toàn cảnh 15 calls/14 geometry/1 texture, thêm đúng một call/geometry so với M8.3. rAF p95 16,7–16,8 ms; GPU p95 2,66 ms desktop, 0,67 ms viewport mobile trên Apple M1 Pro.
+- [ ] **M8.4e — Thiết bị thật:** Safari iOS/Chrome Android, GPU/audio/gesture; chưa dùng số liệu giả lập để kết luận 60 FPS trên điện thoại.
+
+Burst xuất hiện mạnh lúc vào focus là tùy chọn trong plan và chưa bật; trạng thái ổn định cuối video là bản mặc định. Chưa deploy. Mô tả M8.3 phía trên là lịch sử; M8.4 thay thế thiết kế vortex và hợp đồng point-only/1 draw call cũ.
+
+- [x] **Tinh chỉnh ánh sáng M8.4:** tăng độ rõ của thân tim, hạ độ chói lõi bệ và flash theo beat; đã xem desktop/mobile/Light và chạy lại Heart Focus + Energy Vortex (PASS). [Ảnh đối chiếu](assets/heart-vortex-light-balance.jpg).
