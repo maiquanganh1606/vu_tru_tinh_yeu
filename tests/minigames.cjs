@@ -31,10 +31,12 @@ assert(E.better({elapsedMs:1,moves:5},{elapsedMs:2,moves:1}));assert(E.better({e
   }
   await page.keyboard.press('Escape');await page.locator('#puzzle-open').click();
   assert.equal(await page.locator('#puzzle-images button').count(),65);
+  await page.locator('#puzzle-images button').nth(38).click();
   // Control only shuffle output, exercise real moves, timing and persistence through UI.
   await page.evaluate(()=>{PuzzleEngine.shuffle=n=>PuzzleEngine.move(PuzzleEngine.solved(n),n*n-2,n);});
   for(const n of [3,4,5,6]){
    await page.locator('#puzzle-level').selectOption(String(n));await page.locator('#puzzle-start').click();await page.locator('#puzzle-board button').first().waitFor();
+   if(n===3){const boardRatio=await page.locator('#puzzle-board').evaluate(el=>{const r=el.getBoundingClientRect();return r.width/r.height;});assert(Math.abs(boardRatio-(1080/1920))<0.01,'Portrait puzzle must preserve image ratio');}
    const before=await page.locator('#puzzle-time').textContent();await page.waitForTimeout(150);assert.equal(await page.locator('#puzzle-time').textContent(),before);
    await page.locator('#puzzle-preview').click();await page.locator('#puzzle-preview').click();
    await page.locator('#puzzle-pause').click();assert(await page.locator('#puzzle-curtain').isVisible());await page.locator('#puzzle-resume').click();
@@ -44,7 +46,7 @@ assert(E.better({elapsedMs:1,moves:5},{elapsedMs:2,moves:1}));assert(E.better({e
    await page.locator('#puzzle-change').click();
   }
   await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>Universe.mode),'EXPLORE');assert.equal(await page.evaluate(()=>document.getElementById('experience').inert),false);
-  await page.reload();await page.locator('#intro-skip-btn').click();await page.waitForFunction(()=>!document.getElementById('intro-overlay'));await page.locator('#puzzle-open').click();await page.locator('#puzzle-start').click();await page.locator('#puzzle-board button').first().waitFor();assert.match(await page.locator('#puzzle-record').textContent(),/Ảnh này:/);
+  await page.reload();await page.locator('#intro-skip-btn').click();await page.waitForFunction(()=>!document.getElementById('intro-overlay'));await page.locator('#puzzle-open').click();await page.locator('#puzzle-images button').nth(38).click();await page.locator('#puzzle-start').click();await page.locator('#puzzle-board button').first().waitFor();assert.match(await page.locator('#puzzle-record').textContent(),/Ảnh này:/);
   assert.deepEqual(errors,[]);await page.close();console.log(`PASS minigames ${mobile?'mobile':'desktop'}: six constellations, four grids, records, preview, pause, keyboard, modal cleanup`);
  }
  }finally{await browser.close();}

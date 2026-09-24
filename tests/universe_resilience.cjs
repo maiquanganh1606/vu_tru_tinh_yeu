@@ -10,9 +10,10 @@ async function select(page){await page.locator('[data-planet="together"]').focus
  await page.locator('#music-btn').click();await page.waitForFunction(()=>Universe.audio.signals.energy>0.01,{timeout:10000});
  const bands=await page.evaluate(()=>{const data=new Uint8Array(1024);for(let i=2;i<=8;i++)data[i]=255;return{bass:Universe.audio.band(data,44100,2048,40,180),treble:Universe.audio.band(data,44100,2048,2000,8000)}});assert.ok(bands.bass>.6);assert.equal(bands.treble,0);
  await page.locator('#music-btn').click();await page.waitForFunction(()=>Universe.audio.signals.energy<.01);
- // Repeated visits return GPU objects to the same count.
+ // Compare one quality mode: switching to light legitimately frees the refraction texture.
+ if(!await page.evaluate(()=>Universe.light))await page.locator('#quality-btn').click();
+ await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
  const before=await page.evaluate(()=>({...Universe.scene.renderer.info.memory}));
- await page.locator('#quality-btn').click();
  for(let i=0;i<20;i++){await select(page);await page.waitForFunction(()=>Universe.mode==='PLANET_VIEW');await page.locator('#planet-back').click();await page.waitForFunction(()=>Universe.mode==='EXPLORE');}
  assert.deepEqual(await page.evaluate(()=>({...Universe.scene.renderer.info.memory})),before);
  // Context loss while a nested photo dialog is open must return to a usable fallback scene.

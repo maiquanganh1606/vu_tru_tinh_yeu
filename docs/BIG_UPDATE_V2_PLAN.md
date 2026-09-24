@@ -1,6 +1,6 @@
 # Vũ trụ tình yêu 2.0 — Hành trình của hai đứa
 
-Ngày lập: 21/09/2026. Trạng thái: bản 2.0 và M8 Heart Focus đã được tích hợp trong workspace; chưa phát hành. Phần hiện trạng bên dưới ghi lại baseline ở commit `59efeab`. Ước lượng bên dưới là dự kiến, không phải lịch giao hàng đã cam kết.
+Ngày lập: 21/09/2026. Cập nhật 24/09/2026: bản nền 2.0, Heart Focus và mini game đã có trên GitHub/Render; email điều ước đã được chủ nhân xác nhận nhận thành công. Đợt hoàn thiện này chốt tỉ lệ/kích thước bàn xếp hình, một vùng cuộn chung và nút ẩn/hiện số. [Trạng thái triển khai hiện tại](IMPLEMENTATION_V2.md). Nội dung kế hoạch bên dưới ghi lại baseline ở commit `59efeab` và các quyết định theo từng mốc; ước lượng không phải lịch giao hàng đã cam kết.
 
 Cập nhật 22/09/2026: M8.4 đã triển khai theo video `heart.mp4`, qua kiểm thử Chrome và có ảnh/clip, số đo rAF/GPU. [Kết quả chi tiết](ENERGY_VORTEX_UPGRADE_PLAN.md#11-kết-quả-triển-khai-m84--22092026). Còn nghiệm thu điện thoại thật trước phát hành.
 
@@ -314,7 +314,7 @@ Chia thay đổi theo các mốc thành những PR nhỏ, mỗi PR có thể ch�
 - Nút quay lại, Escape hoặc chạm vùng ngoài panel (bao gồm trái tim đang phóng to) đóng cảnh. Chặn mở lặp, chặn tác vụ nền bằng inert và giữ focus tại nút đóng; trở về nút mở khi hoàn tất.
 - Reduced-motion dùng camera chuyển ngắn, bỏ nhịp đập và quỹ đạo động. Khi thiếu/mất WebGL, dùng trái tim 2D cùng timer và toàn bộ thao tác đóng/mở; mất context giữa chuyển cảnh không làm kẹt trạng thái.
 - Kiểm thử tự động: `tests/heart_focus.cjs` kiểm tra canvas click, touch, keyboard, timer, Tab/Escape, đóng ngoài, đóng giữa chuyến bay, resize, khôi phục hành tinh, mất WebGL và bộ nhớ GPU qua nhiều lượt. Ảnh kiểm tra lưu tại `output/playwright/heart-*.png`.
-- Còn nghiệm thu thủ công GPU/audio/cảm ứng trên điện thoại thật trước phát hành. Kênh nhận điều ước vẫn cấu hình sau; cung Cự Giải đã được chọn cho Pé Nhi.
+- Nghiệm thu thủ công GPU/audio/cảm ứng trên điện thoại thật chưa được xác nhận. Kênh nhận điều ước đã cấu hình qua Brevo SMTP và chủ nhân nhận được email; cung Cự Giải đã được chọn cho Pé Nhi.
 
 ## 9. Kiểm thử và điều kiện phát hành
 
@@ -405,6 +405,6 @@ Chi tiết thiết kế, ảnh trước/sau và kết quả: [ENERGY_VORTEX_UPGR
 - [x] **M8.4e — Máy phát triển:** energy_vortex, heart_focus, universe_v2, universe_resilience đều PASS. Có ảnh/clip và benchmark; tài nguyên ổn định. Toàn cảnh 15 calls/14 geometry/1 texture, thêm đúng một call/geometry so với M8.3. rAF p95 16,7–16,8 ms; GPU p95 2,66 ms desktop, 0,67 ms viewport mobile trên Apple M1 Pro.
 - [ ] **M8.4e — Thiết bị thật:** Safari iOS/Chrome Android, GPU/audio/gesture; chưa dùng số liệu giả lập để kết luận 60 FPS trên điện thoại.
 
-Burst xuất hiện mạnh lúc vào focus là tùy chọn trong plan và chưa bật; trạng thái ổn định cuối video là bản mặc định. Chưa deploy. Mô tả M8.3 phía trên là lịch sử; M8.4 thay thế thiết kế vortex và hợp đồng point-only/1 draw call cũ.
+Burst xuất hiện mạnh lúc vào focus là tùy chọn trong plan và chưa bật; trạng thái ổn định cuối video là bản mặc định. Bản M8.4 đã có trên GitHub/Render. Mô tả M8.3 phía trên là lịch sử; M8.4 thay thế thiết kế vortex và hợp đồng point-only/1 draw call cũ.
 
 - [x] **Tinh chỉnh ánh sáng M8.4:** tăng độ rõ của thân tim, hạ độ chói lõi bệ và flash theo beat; đã xem desktop/mobile/Light và chạy lại Heart Focus + Energy Vortex (PASS). [Ảnh đối chiếu](assets/heart-vortex-light-balance.jpg).

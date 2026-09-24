@@ -2,6 +2,8 @@
 
 Website kỷ niệm với intro 3D dài 28 giây: khởi động, hyperdrive qua ảnh ký ức, tiếp cận trái tim và chuyển sáng sang giao diện chính.
 
+Big Update 2.0 gồm hành tinh ký ức, chòm sao, Heart Focus, bệ năng lượng, điều ước qua email và game xếp hình. Website: [vu-tru-tinh-yeu.onrender.com](https://vu-tru-tinh-yeu.onrender.com/).
+
 ## Chạy local
 
 ```sh
@@ -78,7 +80,11 @@ Script hỏi tên thư, câu hỏi, giờ mở có timezone (ví dụ `2028-04-2
 
 Mốc gốc hiện là `2025-07-26T00:00:00+07:00`. Đủ 1.000 ngày là 21/04/2028; nếu tính ngày bắt đầu là ngày số 1, ngày thứ 1.000 là 20/04/2028. Chủ nhân chọn mốc khi cấu hình, không có mốc tự đặt trong capsule.
 
-### Điều ước và kênh nhận (cấu hình sau)
+### Game xếp hình
+
+Chọn ảnh và một trong bốn mức 3 × 3, 4 × 4, 5 × 5, 6 × 6. Bàn chơi giữ tỉ lệ ảnh gốc và nằm trọn trong màn hình khi cuộn chung với phần chữ/nút. Có ảnh mẫu, ẩn/hiện số ngay trong ván chơi, tạm dừng, chơi lại, đổi ảnh, âm thanh và kỷ lục lưu trên thiết bị. Ẩn/hiện số không thay đổi bàn chơi, số nước đi hay đồng hồ.
+
+### Điều ước và kênh nhận
 
 Điều ước được ghi trước vào `instance/universe.sqlite3` cùng tác vụ gửi. Nếu chưa cấu hình kênh/worker, trạng thái vẫn là **đã lưu, chờ gửi**. Không cần cấu hình bot để dùng phần lưu điều ước.
 
@@ -86,6 +92,8 @@ Xem `.env.example` để biết tên biến môi trường. App **không tự n�
 
 - Telegram: `WISH_PROVIDER=telegram`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Người nhận cần bắt đầu trò chuyện với bot trước.
 - Email: `WISH_PROVIDER=email`, `SMTP_HOST`, `SMTP_PORT` (mặc định 587), `SMTP_FROM`, `WISH_EMAIL_TO`; thêm `SMTP_USERNAME` và `SMTP_PASSWORD` nếu server yêu cầu. Kết nối bắt buộc STARTTLS.
+
+Website hiện dùng Brevo SMTP và chủ nhân đã xác nhận nhận được email điều ước. Cấu hình trên Render dùng `smtp-relay.brevo.com`, cổng `2525` vì Render Free chặn các cổng SMTP thông dụng. Lấy `SMTP_USERNAME` từ mục SMTP Login và `SMTP_PASSWORD` từ SMTP key của Brevo; tránh khoảng trắng hoặc xuống dòng thừa khi nhập biến. Địa chỉ gửi phải được xác minh trong Brevo. Không đưa thông tin đăng nhập hoặc địa chỉ nhận riêng vào repository.
 
 Sau khi cấu hình, chạy worker riêng với cùng môi trường và cùng đường dẫn dữ liệu:
 
@@ -126,8 +134,12 @@ node tests/universe_v2.cjs
 node tests/heart_focus.cjs
 node tests/energy_vortex.cjs
 node tests/universe_resilience.cjs
+node tests/minigames.cjs
+node tests/puzzle-layout.cjs
 ```
 
 Các script browser cần package `playwright`, Node.js và Chrome như phần kiểm thử bên trên. Đặt `LOVE_TEST_URL` nếu server không ở cổng 5001. Backend tests dùng DB tạm và sender giả; browser tests điều ước/capsule dùng route giả, không gửi thông báo thật. Kiểm thử mới bao phủ quyền đọc thư, mốc thời gian, idempotency, lease/retry, bốn chòm sao, cảm ứng, ảnh lớn, bộ nhớ GPU và bắt sao băng.
+
+`puzzle-layout.cjs` mặc định mở trực tiếp file HTML; đặt `LOVE_TEST_URL` để kiểm tra bản HTTP. Kiểm tra này bao phủ ảnh dọc/ngang, màn hình nhỏ/ngang, đổi kích thước và một vùng cuộn chung luôn giữ trọn bàn xếp hình.
 
 Xem `docs/IMPLEMENTATION_V2.md` cho phạm vi đã triển khai, nội dung còn cần điền và giới hạn vận hành.

@@ -91,20 +91,24 @@
 <div id="puzzle-panel" class="universe-modal" hidden role="dialog" aria-labelledby="puzzle-title">
 <section class="modal-card puzzle-card">
 <button id="puzzle-close" class="modal-close" type="button" aria-label="Đóng xếp hình">×</button>
+<div class="puzzle-heading">
 <p class="eyebrow">GHÉP LẠI MỘT CHÚT CHÚNG MÌNH</p><h2 id="puzzle-title">Xếp hình ký ức</h2>
 <div class="puzzle-toolbar"><button id="puzzle-sound" class="chip" type="button">Âm thanh</button><span>Kỷ lục lưu trên thiết bị này</span></div>
+<p id="puzzle-status" role="status"></p>
+</div>
 <div id="puzzle-setup">
 <label for="puzzle-level">Độ khó</label><select id="puzzle-level"><option value="3">Dễ · 3 × 3</option><option value="4">Trung bình · 4 × 4</option><option value="5">Khó · 5 × 5</option><option value="6">Rất khó · 6 × 6</option></select>
 <div class="puzzle-toolbar"><button id="puzzle-random" class="chip" type="button">Ảnh ngẫu nhiên</button><button id="puzzle-start" class="primary-button" type="button">Bắt đầu</button></div>
 <p>Chọn một kỷ niệm. Chạm mảnh cạnh ô trống để trượt; có thể dùng phím mũi tên để di chuyển ô trống.</p><div id="puzzle-images" class="puzzle-images" aria-label="Chọn ảnh"></div>
 </div>
-<p id="puzzle-status" role="status"></p>
 <div id="puzzle-play" hidden>
 <div class="puzzle-stats"><span id="puzzle-time" aria-label="Thời gian">00:00.0</span><span id="puzzle-moves">0 nước</span><span id="puzzle-level-label"></span></div>
 <div class="puzzle-layout"><div class="puzzle-stage"><div id="puzzle-board" tabindex="0" role="group" aria-label="Bàn xếp hình. Phím mũi tên di chuyển ô trống."></div><div id="puzzle-curtain" hidden><p>Đã tạm dừng</p><button id="puzzle-resume" class="primary-button" type="button">Tiếp tục</button></div></div>
 <figure id="puzzle-reference"><img id="puzzle-reference-img" alt="Hình mẫu của ván chơi"><figcaption>Hình mẫu</figcaption></figure></div>
-<div class="puzzle-toolbar"><button id="puzzle-preview" class="chip" type="button" aria-pressed="true">Ẩn hình mẫu</button><button id="puzzle-pause" class="chip" type="button">Tạm dừng</button><button id="puzzle-restart" class="chip" type="button">Chơi lại</button><button id="puzzle-change" class="chip" type="button">Đổi ảnh / độ khó</button></div>
+<div class="puzzle-details">
+<div class="puzzle-toolbar"><button id="puzzle-preview" class="chip" type="button" aria-pressed="true">Ẩn hình mẫu</button><button id="puzzle-numbers" class="chip" type="button" aria-pressed="true" aria-controls="puzzle-board">Ẩn số</button><button id="puzzle-pause" class="chip" type="button">Tạm dừng</button><button id="puzzle-restart" class="chip" type="button">Chơi lại</button><button id="puzzle-change" class="chip" type="button">Đổi ảnh / độ khó</button></div>
 <p id="puzzle-result" role="status"></p><p id="puzzle-record"></p>
+</div>
 </div></section></div>
 <div id="map-overlay" class="universe-modal" hidden role="dialog" aria-labelledby="map-title">
     <section class="modal-card"><button id="map-close" class="modal-close" type="button" aria-label="Đóng bản đồ">×</button><p class="eyebrow">CHỌN MỘT ĐIỂM ĐẾN</p><h2 id="map-title">Bản đồ của hai đứa</h2><p>Mỗi khung hình giữ lại một chút chúng mình.</p><div id="planet-menu" class="planet-menu"></div></section>

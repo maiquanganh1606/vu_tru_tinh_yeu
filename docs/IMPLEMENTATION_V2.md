@@ -1,13 +1,13 @@
 # Vũ trụ tình yêu 2.0 — Trạng thái triển khai
 
-Ngày: 21/09/2026. Bản này triển khai trên Flask + JavaScript + Three.js hiện có.
+Ngày cập nhật: 24/09/2026. Big Update 2.0 triển khai trên Flask + JavaScript + Three.js hiện có. Bản nền đã được đưa lên GitHub và Render; đợt hoàn thiện này chốt game xếp hình và các chỉnh sửa giao diện theo phản hồi của chủ nhân.
 
 ## Đã có
 
 - Một cảnh chính với trái tim, nebula và ba hành tinh, camera focus/quay về, ảnh xem trước và album đầy đủ. Một vòng lặp quản lý hiệu ứng, camera, sao băng và tín hiệu âm thanh.
-- Ba mẫu chòm sao: trái tim, QA & YN và **Cự Giải** theo xác nhận của Quang Anh. Chuột, kéo/chạm và bàn phím; nhiều nét, lùi nét, vẽ lại, lưu tiến độ theo phiên bản.
+- Chòm sao trái tim, QA & YN, **Cự Giải** và **Song Tử**, cùng các mức khó bổ sung cho hai cung. Chuột, kéo/chạm và bàn phím; nhiều nét, lùi nét, vẽ lại, lưu tiến độ theo phiên bản.
 - Sao băng có vùng bắt 56 px, chuyển động cùng dữ liệu hit target; bắt được dừng cảnh một giây rồi mở form. Có đường gửi điều ước trực tiếp cho người dùng giảm chuyển động.
-- SQLite lưu điều ước và outbox trong cùng giao dịch; chống trùng theo phiên + khóa request. Worker riêng với lease và retry; adapter Telegram hoặc SMTP STARTTLS. Không chạy worker gửi thật trong lần triển khai này.
+- SQLite lưu điều ước và outbox trong cùng giao dịch; chống trùng theo phiên + khóa request. Worker riêng với lease và retry; adapter Telegram hoặc SMTP STARTTLS. Brevo SMTP đã hoạt động trên Render và chủ nhân xác nhận nhận được email điều ước.
 - Thư tương lai kiểm tra đáp án hash và thời điểm tại server. Metadata không kèm thư, mỗi lần đọc kiểm tra lại quyền phiên và giờ mở; giới hạn thử được lưu trong DB. Có script tạo cấu hình riêng bằng nhập đáp án ẩn.
 - Tách dải bass/mid/treble bằng FFT 2.048, ngưỡng beat thích ứng, làm mượt tín hiệu, ảnh hưởng sao/trái tim/mây. Bật nhạc theo thao tác người dùng, file preview có fallback HTML audio.
 - Giữ intro 28 giây và nhạc intro; phục vụ Three.js r128 tại chỗ, kèm giấy phép MIT. Intro và album dùng thumbnail; ảnh lớn vẫn là bản gốc.
@@ -17,7 +17,7 @@ Ngày: 21/09/2026. Bản này triển khai trên Flask + JavaScript + Three.js h
 
 ## Nội dung còn cần chủ nhân chuẩn bị
 
-Quang Anh đã chọn **cấu hình kênh gửi sau**. Khi chưa cấu hình, điều ước được lưu ở trạng thái chờ; không báo là đã gửi đến anh. Chỉ khởi động worker sau khi đã thiết lập kênh nhận.
+Kênh nhận điều ước đã cấu hình qua Brevo SMTP, cổng 2525 trên Render. Thông tin xác thực và địa chỉ email riêng chỉ lưu trong môi trường triển khai. Khi kênh nhận tạm lỗi, điều ước vẫn được lưu ở trạng thái chờ và worker retry; giao diện chỉ báo đã gửi khi có kết quả gửi thành công.
 
 Chưa có ngày mở thư, câu hỏi/đáp án và thư cá nhân nên capsule hiện lời nhắn “Anh đang chuẩn bị lá thư này”. Engine khóa thời gian đã có và được kiểm thử bằng dữ liệu thử riêng; không điền một đáp án hoặc ngày mở giả vào production.
 
@@ -38,7 +38,7 @@ Album mặc định gồm tất cả ảnh, nhóm file Locket và nhóm file Mes
 - Nhà cung cấp có thể đã nhận thông báo trước khi timeout; retry có thể gửi trùng thông báo dù chỉ có một điều ước trong DB. Mã điều ước giúp nhận diện.
 - SQLite/outbox thiết kế cho một host với volume bền vững. Chạy nhiều host cần chuyển sang DB chung trước.
 - Việc kiểm tra trên viewport cảm ứng/giảm chuyển động không thay thế đo GPU, âm thanh và thao tác trên iPhone/Android thật.
-- Chưa xuất bản lên host công khai vì chưa có đích triển khai hoặc cấu hình kênh/thư riêng. Bản local dùng cùng ứng dụng cần triển khai, không phải mockup.
+- Website đã hoạt động tại [vu-tru-tinh-yeu.onrender.com](https://vu-tru-tinh-yeu.onrender.com/). Bản local dùng cùng ứng dụng; việc nghiệm thu GPU/audio/cảm ứng trên iPhone/Android thật và chuẩn bị nội dung thư cá nhân vẫn là các công việc riêng chưa được xác nhận.
 
 ## Cập nhật visual interaction
 
@@ -59,7 +59,7 @@ Album mặc định gồm tất cả ảnh, nhóm file Locket và nhóm file Mes
 - Mẫu 60 giây mỗi viewport trên Chrome headless của máy phát triển, có bật nhạc: desktop 1440×960 khoảng 60,01 FPS; viewport cảm ứng 390×844 khoảng 60,01 FPS. Cả hai có p95 khoảng 16,7 ms, 18 draw calls, 10 geometry và 1 texture WebGL. Đây là đo khoảng cách requestAnimationFrame, không phải đo thời gian GPU hoặc kiểm tra điện thoại vật lý.
 - Ảnh chụp kiểm tra bố cục lưu tại `output/playwright/v2-*.png`; dữ liệu mẫu hiệu năng tại `output/playwright/v2-performance.json` (thư mục output không vào git).
 
-Chưa thực hiện gửi Telegram/email thật, mở thư cá nhân thật hoặc deploy công khai; các phần này phụ thuộc cấu hình mà chủ nhân chọn cung cấp sau.
+Các kết quả ban đầu bên trên thuộc đợt kiểm tra local ngày 21/09. Đến 24/09, website đã triển khai trên Render và chủ nhân đã xác nhận email điều ước thật đến hộp thư. Chưa xác nhận mở thư cá nhân thật hoặc gửi Telegram.
 
 ## Trái tim ruby và Heart Focus
 
@@ -123,8 +123,24 @@ Kiểm chứng: `energy_vortex.cjs`, `heart_focus.cjs`, `universe_v2.cjs`, `univ
 
 Ảnh/clip và JSON số đo nằm trong `output/playwright/vortex-*`; ảnh so sánh lưu trong `docs/assets/energy-vortex-upgrade-*.jpg`. Chrome headless trên Apple M1 Pro: rAF p95 16,7–16,8 ms cho desktop và viewport touch 390×844, có/không nhạc. GPU timer p95 khi bật nhạc: 2,66 ms desktop, 0,67 ms viewport mobile. Toàn cảnh focus 15 calls/14 geometry/1 texture; tăng một call/geometry so baseline M8.3, số điểm giữ nguyên. Chưa đo GPU baseline hay thiết bị di động thật.
 
-[Kế hoạch và bằng chứng chi tiết](ENERGY_VORTEX_UPGRADE_PLAN.md). M8.4a–d hoàn tất, M8.4e đã qua trên Chrome/macOS và còn nghiệm thu Safari iOS/Chrome Android trước phát hành. Burst xuất hiện là tùy chọn chưa bật. Chưa deploy. Các mục M8.3 phía trên được giữ làm lịch sử và đã được M8.4 thay thế.
+[Kế hoạch và bằng chứng chi tiết](ENERGY_VORTEX_UPGRADE_PLAN.md). M8.4a–d hoàn tất, kiểm tra Chrome/macOS đã qua; M8.4e trên Safari iOS/Chrome Android thật chưa được xác nhận. Burst xuất hiện là tùy chọn chưa bật. M8.4 đã có trong bản nền trên GitHub/Render. Các mục M8.3 phía trên được giữ làm lịch sử và đã được M8.4 thay thế.
 
 ### Tinh chỉnh cân bằng ánh sáng (22/09/2026)
 
 Tăng sáng mantle/hồng và kích thước hạt thân tim 8%; giảm độ sáng, độ phủ lõi vortex và flash theo beat để tim nổi bật hơn bệ. Số hạt và draw calls giữ nguyên. Xem ảnh desktop/mobile/Light ở `output/playwright/light-balance-*.png`; `heart_focus.cjs` và `energy_vortex.cjs` chạy lại PASS. Ảnh trước/sau lưu tại `docs/assets/heart-vortex-light-balance.jpg`.
+
+## Hoàn thiện game xếp hình (24/09/2026)
+
+- Bốn mức 3 × 3, 4 × 4, 5 × 5, 6 × 6; ảnh dọc/ngang giữ tỉ lệ gốc, không cắt hàng mảnh ghép trên màn hình thấp.
+- Bàn chơi và ảnh mẫu được phóng to. Toàn cửa sổ dùng một vùng cuộn chung; hai ảnh bám trong màn hình khi phần tiêu đề, trạng thái và nút cuộn.
+- Nút **Ẩn số / Hiện số** dùng cùng kiểu với **Ẩn hình mẫu / Hiện hình mẫu**, đổi được trong lúc chơi. Không xáo bàn, đặt lại nước đi hoặc đồng hồ; lựa chọn giữ trong phiên trang hiện tại.
+- Giữ tạm dừng/tiếp tục, chơi lại, đổi ảnh/độ khó, âm thanh và kỷ lục trên thiết bị. Nút và bàn vẫn dùng được bằng bàn phím.
+- `tests/puzzle-layout.cjs` kiểm tra tỉ lệ, đủ hàng/cột, nhãn số, cuộn chung, giới hạn sticky, xoay màn hình và tạm dừng ở bốn viewport. Chạy được với file HTML trực tiếp và Flask.
+
+## Kiểm tra chốt Big Update 2.0 (24/09/2026)
+
+- 7 kiểm thử backend, biên dịch Python, kiểm tra cú pháp 23 file JavaScript và cấu hình Gunicorn đều qua.
+- 9 bộ kiểm thử browser qua trong 11 lượt chạy: mini game và bố cục xếp hình đều kiểm tra bằng HTTP lẫn file; smoke, hành trình 2.0, Heart Focus, energy vortex, resilience, intro cinematic và intro audio đều qua.
+- Sửa mốc đo trong kiểm thử resilience: lấy số tài nguyên sau khi chuyển sang chế độ nhẹ, rồi so sánh sau 20 lượt thăm hành tinh. Chuyển chất lượng chủ động giải phóng một texture; đó không phải rò rỉ tài nguyên.
+- Nút ẩn/hiện số được kiểm tra riêng trên desktop/mobile: nhãn và kiểu dáng đúng, ẩn/hiện được trong ván chơi, không thay đổi bàn, nước đi hoặc đồng hồ.
+- Hoàn tất phạm vi mã nguồn của Big Update 2.0. Nội dung thư riêng và nghiệm thu điện thoại vật lý vẫn được ghi rõ là chưa xác nhận; các số đo Chrome không đại diện cho GPU điện thoại thật.

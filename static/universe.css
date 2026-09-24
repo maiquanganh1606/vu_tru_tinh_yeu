@@ -54,30 +54,40 @@ body:not([data-mode=EXPLORE]) .portal-ring:before,body:not([data-mode=EXPLORE]) 
 .puzzle-card{width:min(100%,1000px)}.puzzle-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0}.puzzle-toolbar>span{font-size:12px;color:var(--muted)}.puzzle-card select{background:#21182b;color:#f4eaf5;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:44px;width:100%;font-size:16px}.puzzle-images{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;max-height:40dvh;overflow:auto;padding:4px}.puzzle-photo{border:2px solid transparent;border-radius:10px;padding:3px;background:#21182b}.puzzle-photo[aria-pressed=true]{border-color:var(--mint);box-shadow:0 0 12px #bde3d833}.puzzle-photo img{display:block;width:100%;height:90px;object-fit:cover;border-radius:6px}.puzzle-stats{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--mint);font:16px 'Share Tech Mono',monospace;margin:16px 0}.puzzle-layout{display:flex;gap:24px;align-items:flex-start}.puzzle-stage{position:relative;flex:1;min-width:0;max-width:560px}#puzzle-board{display:grid;grid-template-columns:repeat(var(--size),1fr);grid-template-rows:repeat(var(--size),1fr);gap:0;background:#090610;border:0;border-radius:12px;overflow:hidden;width:100%;outline:2px solid #cfadc34d;outline-offset:0}.puzzle-tile{position:relative;border:0;border-radius:0;padding:0;min-width:0;min-height:44px;background-repeat:no-repeat;cursor:pointer;touch-action:manipulation;box-shadow:inset -1px -1px 0 #090610}.puzzle-tile:hover{filter:brightness(1.12)}.tile-number{position:absolute;bottom:3px;right:3px;background:#120d1ccc;color:#fff;border-radius:4px;font:10px system-ui;padding:1px 4px}.puzzle-empty{background:radial-gradient(ellipse,#302137,#0c0811)}#puzzle-reference{margin:0;width:28%;min-width:110px}#puzzle-reference-img{display:block;width:100%;height:auto;object-fit:contain;border-radius:10px}#puzzle-reference figcaption{color:var(--muted);font-size:12px;text-align:center;padding:8px}#puzzle-curtain{position:absolute;inset:0;background:#15101e;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:12px}#puzzle-curtain[hidden],#puzzle-play[hidden],#puzzle-setup[hidden],#puzzle-reference[hidden],.constellation-tabs button[hidden]{display:none}.drawing-tools{flex-wrap:wrap;justify-content:center}#constellation-difficulties{margin-bottom:10px}.constellation-board{height:auto;aspect-ratio:1;width:min(82vw,620px)}.constellation-panel{justify-content:flex-start}.constellation-board{flex-shrink:0}.constellation-tabs{flex-shrink:0}
 @media(max-width:650px){.puzzle-card{padding:26px 12px}.puzzle-layout{flex-direction:column;gap:12px}.puzzle-stage{width:100%}#puzzle-reference{width:100%;max-width:150px;align-self:center}.puzzle-stats{font-size:13px}.puzzle-images{grid-template-columns:repeat(3,1fr)}.puzzle-toolbar .chip{padding:9px 11px;font-size:12px}.constellation-board{width:94vw;min-width:0}.drawing-tools{padding-bottom:env(safe-area-inset-bottom)}}
 
-/* Keep the active puzzle in one viewport instead of making the player scroll. */
-.puzzle-card{max-height:calc(100dvh - 24px);overflow:hidden;padding:24px clamp(18px,3vw,38px)}
-.puzzle-card #puzzle-play{min-height:0}
-.puzzle-card #puzzle-play > .puzzle-toolbar{margin:10px 0 0}
-.puzzle-layout{display:grid;grid-template-columns:minmax(0,1fr) clamp(96px,25%,190px);gap:clamp(12px,2vw,24px);align-items:center;min-height:0}
-.puzzle-stage{width:min(100%,calc(100dvh - 360px));max-width:560px;justify-self:center}
-#puzzle-board{max-height:calc(100dvh - 360px)}
-#puzzle-reference{width:100%;min-width:0;max-width:190px;justify-self:center}
-#puzzle-reference-img{max-height:calc(100dvh - 330px)}
-.puzzle-stats{margin:8px 0;font-size:clamp(13px,1.5vw,16px)}
+/* One shared scroll; the photos stick inside the card while text and controls move. */
+#puzzle-panel{padding:12px;overflow:hidden}
+.puzzle-card{max-height:calc(100dvh - 24px);overflow-x:hidden;overflow-y:auto;padding:12px clamp(12px,2vw,28px)}
+.puzzle-card:has(#puzzle-play:not([hidden])){height:calc(100dvh - 24px);overscroll-behavior:contain}
+.puzzle-heading{display:flow-root;padding-right:44px}
+.puzzle-heading .eyebrow{margin-bottom:6px}
+.puzzle-heading h2{margin-bottom:8px}
+.puzzle-heading .puzzle-toolbar{margin:6px 0}
+#puzzle-close{z-index:3}
+.puzzle-card #puzzle-play{display:flow-root}
+.puzzle-details{padding:12px 4px 4px}
+.puzzle-details > .puzzle-toolbar{margin:0}
+.puzzle-layout{position:sticky;top:12px;z-index:1;background:#15101e;display:grid;grid-template-columns:minmax(0,1fr) min(28%,230px);grid-template-rows:minmax(0,1fr);gap:clamp(8px,2vw,24px);align-items:center;min-height:0;padding:4px}
+.puzzle-stage{width:100%;max-width:640px;justify-self:center}
+#puzzle-board{max-height:none}
+.puzzle-tile{min-height:0;container-type:inline-size}
+.tile-number{font-size:min(10px,45cqw);right:min(3px,6cqw);padding:1px min(4px,8cqw)}
+#puzzle-board.hide-numbers .tile-number{visibility:hidden}
+#puzzle-reference{width:100%;min-width:0;max-width:230px;justify-self:center}
+#puzzle-reference-img{max-height:none}
+.puzzle-stats{margin:4px 0 8px;font-size:16px}
 .puzzle-card #puzzle-status{margin:4px 0;font-size:12px;line-height:1.35}
 .puzzle-card #puzzle-result,.puzzle-card #puzzle-record{margin:7px 0 0;font-size:12px;line-height:1.35}
 @media(max-width:650px){
-    .puzzle-card{padding:18px 12px;border-radius:16px}
+    #puzzle-panel{padding:6px}
+    .puzzle-card{padding:10px;border-radius:16px;max-height:calc(100dvh - 12px)}
+    .puzzle-card:has(#puzzle-play:not([hidden])){height:calc(100dvh - 12px)}
     .puzzle-card h2{font-size:27px;margin-bottom:8px}
-    .puzzle-card > .puzzle-toolbar{margin:5px 0 8px}
-    .puzzle-layout{grid-template-columns:minmax(0,1fr) 88px;gap:10px}
+    .puzzle-layout{top:10px;grid-template-columns:minmax(0,1fr) 100px;gap:8px;padding:4px 0}
     .puzzle-stage{width:100%;max-width:none}
-    #puzzle-board{max-height:none}
-    #puzzle-reference{width:88px;max-width:88px;align-self:center}
-    #puzzle-reference-img{max-height:none}
+    #puzzle-reference{max-width:100px;align-self:center}
     #puzzle-reference figcaption{font-size:10px;padding:4px 0}
     .puzzle-stats{margin:5px 0;font-size:12px;gap:5px}
-    .puzzle-card #puzzle-play > .puzzle-toolbar{gap:4px;margin-top:8px}
-    .puzzle-card #puzzle-play > .puzzle-toolbar .chip{padding:7px 8px;min-height:38px;font-size:11px}
+    .puzzle-details > .puzzle-toolbar{gap:4px}
+    .puzzle-details > .puzzle-toolbar .chip{padding:7px 8px;min-height:38px;font-size:11px}
     .puzzle-card #puzzle-result,.puzzle-card #puzzle-record{font-size:11px;margin-top:4px}
 }

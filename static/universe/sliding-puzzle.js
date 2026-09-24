@@ -1,7 +1,7 @@
 (() => {
     const U=window.Universe,E=window.PuzzleEngine,$=U.$,key='love:v2:sliding-puzzle:records:v1';
     const labels={3:'Dễ',4:'Trung bình',5:'Khó',6:'Rất khó'};
-    let selected=null, memory=null,n=3,board=[],moves=0,elapsed=0,since=null,ticker=null,state='setup',generation=0,source='',ratio=1,preview=true,records={};
+    let selected=null, memory=null,n=3,board=[],moves=0,elapsed=0,since=null,ticker=null,state='setup',generation=0,source='',ratio=1,preview=true,records={},resizeFrame=null;
     const time=()=>elapsed+(since===null?0:performance.now()-since);
     const format=ms=>`${String(Math.floor(ms/60000)).padStart(2,'0')}:${(ms/1000%60).toFixed(1).padStart(4,'0')}`;
     function soundButton(){ $('puzzle-sound').textContent=U.gameSound.enabled?'♪ Âm thanh: bật':'♪ Âm thanh: tắt';$('puzzle-sound').setAttribute('aria-pressed',String(U.gameSound.enabled)); }
@@ -19,7 +19,34 @@
         const all=Object.entries(records).filter(([id])=>id.startsWith(`${n}:`)).map(([,r])=>r).sort((a,b)=>a.elapsedMs-b.elapsedMs||a.moves-b.moves);
         $('puzzle-record').textContent=`${best?`Ảnh này: ${format(best.elapsedMs)} · ${best.moves} nước`:'Ảnh này chưa có kỷ lục'}${all.length?` · Nhanh nhất mức ${labels[n]}: ${format(all[0].elapsedMs)}`:''}`;
     }
-    function reference(){ $('puzzle-reference').hidden=!preview||state==='paused';$('puzzle-preview').textContent=preview?'Ẩn hình mẫu':'Hiện hình mẫu';$('puzzle-preview').setAttribute('aria-pressed',String(preview)); }
+    function reference(){ $('puzzle-reference').hidden=!preview||state==='paused';$('puzzle-preview').textContent=preview?'Ẩn hình mẫu':'Hiện hình mẫu';$('puzzle-preview').setAttribute('aria-pressed',String(preview));scheduleResize(); }
+    function resizeBoard(){
+        const area=$('puzzle-board'),stage=area?.parentElement,layout=stage?.parentElement;
+        if(!area||!stage||!layout||state==='setup'||state==='closed')return;
+        const stageStyle=getComputedStyle(stage),maxWidth=parseFloat(stageStyle.maxWidth);
+        const layoutStyle=getComputedStyle(layout),tracks=layoutStyle.gridTemplateColumns.split(/\s+/).map(parseFloat);
+        const card=layout.closest('.puzzle-card'),cardStyle=getComputedStyle(card);
+        const heading=card.querySelector('.puzzle-heading'),stats=card.querySelector('.puzzle-stats'),statsStyle=getComputedStyle(stats);
+        // Use normal-flow heights so scrolling the sticky photos never changes their size.
+        const heightLimit=card.clientHeight-parseFloat(cardStyle.paddingTop)-parseFloat(cardStyle.paddingBottom)
+            -heading.getBoundingClientRect().height-stats.getBoundingClientRect().height
+            -parseFloat(statsStyle.marginTop)-parseFloat(statsStyle.marginBottom)
+            -parseFloat(layoutStyle.paddingTop)-parseFloat(layoutStyle.paddingBottom)-4;
+        if(heightLimit<=0)return;
+        const firstTrack=tracks[0];
+        const availableWidth=Number.isFinite(firstTrack)?firstTrack:layout.clientWidth;
+        const widthLimit=Math.min(availableWidth,Number.isFinite(maxWidth)?maxWidth:availableWidth);
+        const width=Math.max(1,Math.min(widthLimit,heightLimit*ratio));
+        stage.style.width=`${width}px`;stage.style.height=`${width/ratio}px`;stage.style.aspectRatio=String(ratio);
+        area.style.width='100%';area.style.height='100%';area.style.aspectRatio=String(ratio);
+        const sample=$('puzzle-reference'),caption=sample.querySelector('figcaption');
+        const sampleHeight=Math.max(1,heightLimit-caption.getBoundingClientRect().height);
+        sample.style.width=`${Math.min(tracks[1],sampleHeight*ratio)}px`;
+    }
+    function scheduleResize(){
+        if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);
+        resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;resizeBoard();});
+    }
     function render(){
         const area=$('puzzle-board');area.replaceChildren();area.style.setProperty('--size',n);area.style.aspectRatio=String(ratio);
         board.forEach((value,index)=>{
@@ -34,7 +61,7 @@
             tile.style.backgroundPosition=`${value%n/(n-1)*100}% ${Math.floor(value/n)/(n-1)*100}%`;
             const number=U.node('span','tile-number',String(value+1));tile.append(number);area.append(tile);
         });
-        $('puzzle-moves').textContent=`${moves} nước`;clock();
+        $('puzzle-moves').textContent=`${moves} nước`;clock();resizeBoard();
     }
     function move(index){
         if(state!=='ready'&&state!=='playing')return;
@@ -93,9 +120,13 @@
         $('puzzle-random').onclick=()=>{const list=U.config.memories.filter(m=>m.id!==selected?.id);choose((list[Math.floor(Math.random()*list.length)]||selected)?.id);};
         $('puzzle-start').onclick=start;$('puzzle-restart').onclick=start;$('puzzle-change').onclick=setup;
         $('puzzle-preview').onclick=()=>{preview=!preview;reference();};$('puzzle-pause').onclick=pause;$('puzzle-resume').onclick=resume;
+        $('puzzle-numbers').onclick=()=>{const hidden=$('puzzle-board').classList.toggle('hide-numbers');$('puzzle-numbers').textContent=hidden?'Hiện số':'Ẩn số';$('puzzle-numbers').setAttribute('aria-pressed',String(!hidden));};
         $('puzzle-sound').onclick=()=>{U.gameSound.toggle();soundButton();};
         $('puzzle-board').addEventListener('keydown',event=>{const directions={ArrowUp:-n,ArrowDown:n,ArrowLeft:-1,ArrowRight:1,w:-n,s:n,a:-1,d:1};if(event.key in directions){event.preventDefault();move(board.indexOf(n*n-1)+directions[event.key]);}});
+        window.addEventListener('resize',scheduleResize,{passive:true});
+        const resizeObserver=new ResizeObserver(scheduleResize),card=$('puzzle-board').closest('.puzzle-card');
+        [card,card.querySelector('.puzzle-heading'),card.querySelector('.puzzle-layout')].forEach(el=>resizeObserver.observe(el));
         document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
-        window.addEventListener('universe:modalclose',event=>{if(event.detail==='puzzle-panel'){++generation;stop();state='closed';board=[];$('puzzle-board').replaceChildren();$('puzzle-reference-img').removeAttribute('src');source='';}});
+        window.addEventListener('universe:modalclose',event=>{if(event.detail==='puzzle-panel'){++generation;stop();state='closed';board=[];$('puzzle-board').replaceChildren();$('puzzle-board').removeAttribute('style');$('puzzle-reference-img').removeAttribute('src');source='';}});
     }};
 })();
