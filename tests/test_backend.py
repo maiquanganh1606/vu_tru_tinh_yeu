@@ -40,6 +40,26 @@ class UniverseAPI(unittest.TestCase):
     def wish(self, key='abcdefghijklmnop'):
         return self.post('/api/wishes',dict(content='Một ngày cùng nhau',idempotencyKey=key))
 
+    def test_mid_autumn_is_an_isolated_page_in_the_same_app(self):
+        legacy = self.client.get('/trung-thu-2026/')
+        self.assertEqual(legacy.status_code, 301)
+        self.assertEqual(legacy.headers['Location'], '/trung-thu/')
+        response = self.client.get('/trung-thu/')
+        self.assertEqual(response.status_code, 200)
+        html = response.get_data(as_text=True)
+        self.assertIn('/static/mid-autumn/app.js', html)
+        self.assertIn('Gửi ước nguyện lên cung trăng', html)
+        self.assertNotIn('/static/app.js', html)
+        self.assertNotIn('/static/universe/', html)
+        self.assertIn('href="/"', html)
+        home = self.client.get('/').get_data(as_text=True)
+        self.assertIn('href="/trung-thu/"', home)
+        self.assertNotIn('/static/mid-autumn/', home)
+        for asset in ('app.js', 'style.css', 'timeline.js', 'stage.js', 'flight.js', 'scene.js', 'audio.js', 'assets/hang-mobile.webp'):
+            with self.subTest(asset=asset):
+                with self.client.get('/static/mid-autumn/' + asset) as result:
+                    self.assertEqual(result.status_code, 200)
+
     def test_capsule_never_leaks_before_time_and_checks_each_request(self):
         self.capsule()
         for path in ('/', '/api/universe', '/static/memories.js', '/api/capsules/future'):

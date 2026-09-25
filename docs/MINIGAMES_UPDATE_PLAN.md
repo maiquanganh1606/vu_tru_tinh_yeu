@@ -203,7 +203,7 @@ Lưu schema có phiên bản để sau này đổi luật không làm hỏng d�
 
 ### Frontend
 
-- `200 days/200 days (frontend).html`: thêm nút Mini game, panel chọn game, panel thiết lập/chơi/hoàn thành puzzle; thêm các script theo thứ tự `core → constellations → sliding-puzzle → app`.
+- `templates/index.html`: thêm nút Mini game, panel chọn game, panel thiết lập/chơi/hoàn thành puzzle; thêm các script theo thứ tự `core → constellations → sliding-puzzle → app`.
 - `static/universe/constellations.js`: tách chọn cấp độ khỏi chọn mẫu, đọc `rules`, gợi ý có giới hạn và render trạng thái cấp độ.
 - `static/universe/sliding-puzzle.js`: module độc lập với `init`, `open`, `start`, `pause`, `resume`, `move`, `finish`, `dispose`.
 - `static/app.js`: đăng ký nút mở game, khởi tạo module, áp dụng feature flag và khôi phục focus.

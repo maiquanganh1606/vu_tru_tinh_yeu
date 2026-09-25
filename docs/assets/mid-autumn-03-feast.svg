@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup màn hình Phá cỗ dưới trăng</title>
+  <desc id="desc">Màn hình chọn ảnh kỷ niệm, bánh Trung Thu và lời chúc trong trang phụ.</desc>
+  <rect width="1440" height="900" fill="#080612"/>
+  <g fill="#e8bdd3" opacity=".75"><circle cx="112" cy="140" r="2"/><circle cx="334" cy="88" r="2"/><circle cx="612" cy="154" r="3"/><circle cx="1160" cy="114" r="2"/><circle cx="1320" cy="270" r="2"/><circle cx="1060" cy="760" r="2"/><circle cx="220" cy="784" r="2"/></g>
+  <circle cx="1210" cy="154" r="82" fill="#e9d7bd"/>
+  <text x="72" y="70" fill="#b8aec7" font-family="monospace" font-size="15" letter-spacing="4">ĐÊM TRĂNG ĐOÀN VIÊN  /  02 — 03</text>
+  <text x="1368" y="70" fill="#bde3d8" font-family="sans-serif" font-size="16" text-anchor="end">Về trang chính</text>
+  <line x1="72" y1="102" x2="1368" y2="102" stroke="#c9b7df" stroke-opacity=".2"/>
+  <text x="72" y="174" fill="#f7d9e8" font-family="Georgia, serif" font-size="50">Phá cỗ dưới trăng</text>
+  <text x="72" y="212" fill="#b8aec7" font-family="sans-serif" font-size="17">Chọn một khung hình, một vị bánh và một điều muốn gửi.</text>
+  <rect x="72" y="264" width="560" height="500" rx="18" fill="#151023" stroke="#c9b7df" stroke-opacity=".25"/>
+  <rect x="104" y="302" width="496" height="318" rx="10" fill="#2d1c33"/>
+  <path d="M104 548 L248 416 L360 512 L442 432 L600 620 H104Z" fill="#61405f"/>
+  <circle cx="474" cy="390" r="38" fill="#c99094"/>
+  <circle cx="474" cy="390" r="19" fill="#f0c3a9"/>
+  <text x="352" y="672" fill="#bde3d8" font-family="monospace" font-size="14" text-anchor="middle" letter-spacing="2">KHUNG HÌNH KỶ NIỆM</text>
+  <rect x="218" y="704" width="268" height="44" rx="22" fill="none" stroke="#c9b7df" stroke-opacity=".4"/>
+  <text x="352" y="732" fill="#b8aec7" font-family="sans-serif" font-size="14" text-anchor="middle">Đổi ảnh</text>
+  <rect x="682" y="264" width="686" height="500" rx="18" fill="#15101e" stroke="#c9b7df" stroke-opacity=".25"/>
+  <text x="724" y="322" fill="#b8aec7" font-family="monospace" font-size="14" letter-spacing="2">MÂM CỖ CỦA MÌNH</text>
+  <text x="724" y="368" fill="#f7d9e8" font-family="Georgia, serif" font-size="32">Chọn một chút ngọt ngào</text>
+  <rect x="724" y="402" width="286" height="76" rx="12" fill="#21182b" stroke="#ecc2d8" stroke-opacity=".75"/>
+  <circle cx="760" cy="440" r="20" fill="#c8884e"/><circle cx="760" cy="440" r="12" fill="#e9b572"/>
+  <text x="800" y="436" fill="#f7d9e8" font-family="sans-serif" font-size="16">Bánh nướng</text>
+  <text x="800" y="460" fill="#b8aec7" font-family="sans-serif" font-size="13">ấm và thơm</text>
+  <rect x="1030" y="402" width="286" height="76" rx="12" fill="#21182b" stroke="#c9b7df" stroke-opacity=".35"/>
+  <circle cx="1066" cy="440" r="20" fill="#efe0d2"/><circle cx="1066" cy="440" r="12" fill="#fff5e8"/>
+  <text x="1106" y="436" fill="#f7d9e8" font-family="sans-serif" font-size="16">Bánh dẻo</text>
+  <text x="1106" y="460" fill="#b8aec7" font-family="sans-serif" font-size="13">mềm và trong</text>
+  <text x="724" y="534" fill="#bde3d8" font-family="monospace" font-size="14" letter-spacing="2">LỜI CHÚC</text>
+  <rect x="724" y="558" width="592" height="72" rx="10" fill="#090810" stroke="#c9b7df" stroke-opacity=".3"/>
+  <text x="748" y="601" fill="#7a6d88" font-family="sans-serif" font-size="15">Viết một lời chúc thật lòng cho đêm nay…</text>
+  <rect x="724" y="672" width="250" height="54" rx="27" fill="#ecc2d8"/>
+  <text x="849" y="706" fill="#271322" font-family="sans-serif" font-size="15" text-anchor="middle" font-weight="700">Tiếp tục gửi lời chúc</text>
+  <text x="1008" y="706" fill="#7a6d88" font-family="sans-serif" font-size="14">Có thể bỏ qua</text>
+</svg>

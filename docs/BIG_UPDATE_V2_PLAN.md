@@ -25,11 +25,11 @@ Phạm vi phát hành 2.0 gồm đủ năm tính năng. Các mốc phát triển
 - `static/love_song.mp3` khoảng 29 MB. Nhạc nền có `preload="none"`; cần giữ cách tải theo nhu cầu và tạo bản tối ưu, nghe so sánh trước khi thay thế.
 - Sao băng hiện là phần tử CSS tạo mỗi 2,5 giây, sống 3 giây, đặt `pointer-events: none`; chưa có bắt sao hoặc gửi điều ước.
 - HTML có bảng chính giữa, thư viện ảnh, lightbox và bốn thư “Open When...”. Các thư này có sẵn trong HTML; thư tương lai cần cơ chế khác để chưa đến ngày thì chưa tải nội dung xuống trình duyệt.
-- `200.py` mới phục vụ trang và danh sách ảnh. Chưa có cơ sở dữ liệu, API điều ước, kiểm tra đáp án hoặc dịch vụ Telegram/email.
+- `app.py` mới phục vụ trang và danh sách ảnh. Chưa có cơ sở dữ liệu, API điều ước, kiểm tra đáp án hoặc dịch vụ Telegram/email.
 - Camera chính luôn chạy theo con trỏ trong vòng lặp render; `body onclick` luôn hiện bảng chính. Cần đổi hai cơ chế này trước khi bổ sung điều hướng hành tinh và vẽ sao.
 - Có ba bộ kiểm thử trình duyệt: `browser_smoke.cjs`, `intro_cinematic.cjs`, `intro_audio.cjs`. Smoke test còn kiểm tra mở file trực tiếp và khi CDN bị chặn.
 
-**Lưu ý về mốc thời gian:** code đang đặt ngày bắt đầu là **26/07/2025**, nhưng tiêu đề vẫn là “200 DAYS”. Nếu ngày này đúng, ngày kỷ niệm một năm là 26/07/2026, đã qua tại thời điểm lập kế hoạch. Đủ 1.000 ngày là 21/04/2028; nếu tính ngày bắt đầu là ngày số 1 thì ngày thứ 1.000 là 20/04/2028. Cần chọn một quy ước và dùng thống nhất theo `Asia/Ho_Chi_Minh`.
+**Lưu ý về mốc thời gian:** bản khảo sát ban đầu đặt ngày bắt đầu là **26/07/2025** và tiêu đề theo dịp kỷ niệm; giao diện hiện dùng tên “Vũ trụ tình yêu”. Nếu ngày này đúng, ngày kỷ niệm một năm là 26/07/2026, đã qua tại thời điểm lập kế hoạch. Đủ 1.000 ngày là 21/04/2028; nếu tính ngày bắt đầu là ngày số 1 thì ngày thứ 1.000 là 20/04/2028. Cần chọn một quy ước và dùng thống nhất theo `Asia/Ho_Chi_Minh`.
 
 ## 3. Hành trình và nguyên tắc tương tác
 
@@ -230,7 +230,7 @@ flowchart TD
 - `static/universe/ui.js`, `api.js`: lớp giao diện truy cập được và xử lý request/trạng thái mạng.
 - `static/universe.css`: tách CSS cho cảnh mới khỏi HTML lớn; kế thừa phong cách hiện có.
 - `content/universe.json`: metadata công khai; build bản snapshot cho chế độ xem static. Không chứa thư tương lai, đáp án hay token.
-- `200.py`: vẫn là entry point Flask; thêm `server/` cho routes, lưu trữ, kiểm tra capsule và gửi thông báo. `scripts/deliver_wishes.py` là worker triển khai riêng.
+- `app.py`: vẫn là entry point Flask; thêm `server/` cho routes, lưu trữ, kiểm tra capsule và gửi thông báo. `scripts/deliver_wishes.py` là worker triển khai riêng.
 - `instance/`: DB/dữ liệu riêng trên volume bền vững, được loại khỏi git và static serving.
 - `tests/`: mở rộng luồng trình duyệt và thêm kiểm thử backend cho thời gian, quyền đọc thư, lưu/retry điều ước.
 

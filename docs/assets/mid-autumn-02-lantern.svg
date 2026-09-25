@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup màn hình Rước đèn ông sao</title>
+  <desc id="desc">Màn hình nối các điểm thành đèn ông sao, có hướng dẫn và tiến độ ở bảng bên phải.</desc>
+  <rect width="1440" height="900" fill="#080612"/>
+  <g fill="#e8bdd3" opacity=".75"><circle cx="120" cy="116" r="2"/><circle cx="264" cy="212" r="3"/><circle cx="438" cy="102" r="2"/><circle cx="702" cy="155" r="2"/><circle cx="1180" cy="122" r="2"/><circle cx="1304" cy="372" r="2"/><circle cx="1010" cy="778" r="2"/><circle cx="268" cy="770" r="2"/></g>
+  <text x="72" y="70" fill="#b8aec7" font-family="monospace" font-size="15" letter-spacing="4">ĐÊM TRĂNG ĐOÀN VIÊN  /  01 — 03</text>
+  <text x="1368" y="70" fill="#bde3d8" font-family="sans-serif" font-size="16" text-anchor="end">Về trang chính</text>
+  <line x1="72" y1="102" x2="1368" y2="102" stroke="#c9b7df" stroke-opacity=".2"/>
+  <text x="72" y="170" fill="#f7d9e8" font-family="Georgia, serif" font-size="48">Rước đèn ông sao</text>
+  <text x="72" y="208" fill="#b8aec7" font-family="sans-serif" font-size="17">Nối những vì sao để thắp sáng chiếc đèn của đêm nay.</text>
+  <rect x="72" y="260" width="790" height="520" rx="18" fill="#100c1d" stroke="#c9b7df" stroke-opacity=".25"/>
+  <circle cx="466" cy="518" r="205" fill="#151023" stroke="#c9b7df" stroke-opacity=".25"/>
+  <circle cx="466" cy="518" r="168" fill="none" stroke="#d5c0e3" stroke-opacity=".18" stroke-dasharray="3 14"/>
+  <g stroke="#e85e8d" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M466 336 L513 466 L649 466 L539 546 L580 678 L466 602 L352 678 L393 546 L283 466 L419 466 Z"/>
+  </g>
+  <g fill="#f7d9e8" stroke="#e85e8d" stroke-width="3">
+    <circle cx="466" cy="336" r="11"/><circle cx="513" cy="466" r="11"/><circle cx="649" cy="466" r="11"/><circle cx="539" cy="546" r="11"/><circle cx="580" cy="678" r="11"/>
+    <circle cx="466" cy="602" r="11"/><circle cx="352" cy="678" r="11"/><circle cx="393" cy="546" r="11"/><circle cx="283" cy="466" r="11"/><circle cx="419" cy="466" r="11"/>
+  </g>
+  <circle cx="466" cy="518" r="8" fill="#bde3d8"/>
+  <text x="106" y="312" fill="#bde3d8" font-family="monospace" font-size="14" letter-spacing="2">ĐÈN ÔNG SAO · 4 / 10 NÉT</text>
+  <text x="106" y="744" fill="#7a6d88" font-family="sans-serif" font-size="14">Chạm một sao, rồi chạm sao kế bên. Nhấc tay để bắt đầu nét mới.</text>
+  <rect x="900" y="260" width="468" height="520" rx="18" fill="#15101e" stroke="#c9b7df" stroke-opacity=".25"/>
+  <text x="944" y="326" fill="#b8aec7" font-family="monospace" font-size="14" letter-spacing="2">BƯỚC 01</text>
+  <text x="944" y="382" fill="#f7d9e8" font-family="Georgia, serif" font-size="36">Thắp một vì sao</text>
+  <text x="944" y="432" fill="#b8aec7" font-family="sans-serif" font-size="17">Mỗi nét sáng thêm một chút</text>
+  <text x="944" y="460" fill="#b8aec7" font-family="sans-serif" font-size="17">cho con đường về nhà của Cuội.</text>
+  <line x1="944" y1="520" x2="1324" y2="520" stroke="#c9b7df" stroke-opacity=".2"/>
+  <text x="944" y="570" fill="#bde3d8" font-family="monospace" font-size="17">TIẾN ĐỘ</text>
+  <text x="1324" y="570" fill="#f7d9e8" font-family="monospace" font-size="17" text-anchor="end">4 / 10</text>
+  <rect x="944" y="596" width="380" height="8" rx="4" fill="#302137"/><rect x="944" y="596" width="152" height="8" rx="4" fill="#e85e8d"/>
+  <rect x="944" y="656" width="158" height="50" rx="25" fill="#ecc2d8"/>
+  <text x="1023" y="687" fill="#271322" font-family="sans-serif" font-size="15" text-anchor="middle" font-weight="700">Gợi ý</text>
+  <rect x="1118" y="656" width="206" height="50" rx="25" fill="none" stroke="#c9b7df" stroke-opacity=".4"/>
+  <text x="1221" y="687" fill="#bde3d8" font-family="sans-serif" font-size="15" text-anchor="middle">Nét mới</text>
+</svg>

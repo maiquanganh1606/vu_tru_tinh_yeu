@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup trang vào Đêm trăng đoàn viên</title>
+  <desc id="desc">Màn hình mở đầu của trang phụ Trung Thu với đèn ông sao, lời giới thiệu và nút bắt đầu.</desc>
+  <rect width="1440" height="900" fill="#080612"/>
+  <circle cx="1180" cy="205" r="128" fill="#e9d7bd"/>
+  <circle cx="1230" cy="170" r="128" fill="#080612"/>
+  <g fill="#e8bdd3" opacity=".75">
+    <circle cx="114" cy="132" r="2"/><circle cx="248" cy="216" r="3"/><circle cx="391" cy="102" r="2"/><circle cx="538" cy="178" r="2"/>
+    <circle cx="812" cy="115" r="2"/><circle cx="1003" cy="308" r="3"/><circle cx="1332" cy="350" r="2"/><circle cx="1264" cy="640" r="2"/>
+    <circle cx="188" cy="684" r="2"/><circle cx="438" cy="784" r="3"/><circle cx="1030" cy="784" r="2"/>
+  </g>
+  <path d="M0 724 C220 674 370 742 560 716 C800 683 1026 744 1440 676 V900 H0Z" fill="#100c1d"/>
+  <path d="M0 788 C260 748 436 808 694 772 C975 732 1180 798 1440 748 V900 H0Z" fill="#151023"/>
+  <g transform="translate(1040 406)" stroke="#f2bfd3" stroke-width="5" fill="none">
+    <path d="M0 -154 L42 -46 L154 -46 L64 20 L96 132 L0 66 L-96 132 L-64 20 L-154 -46 L-42 -46 Z" fill="#c93666"/>
+    <path d="M0 -154 V66 M-154 -46 H154 M-96 132 L0 -154 L96 132 M-96 132 L154 -46 L-154 -46 L96 132" opacity=".65"/>
+  </g>
+  <path d="M1040 560 V692" stroke="#f2bfd3" stroke-width="5"/>
+  <rect x="1014" y="692" width="52" height="7" rx="3" fill="#f2bfd3"/>
+  <text x="84" y="72" fill="#b8aec7" font-family="monospace" font-size="16" letter-spacing="4">VŨ TRỤ TÌNH YÊU  /  TRANG PHỤ</text>
+  <text x="1240" y="72" fill="#bde3d8" font-family="sans-serif" font-size="16" text-anchor="middle">Về vũ trụ tình yêu</text>
+  <line x1="1112" y1="91" x2="1368" y2="91" stroke="#c9b7df" stroke-opacity=".32"/>
+  <text x="84" y="276" fill="#b8aec7" font-family="monospace" font-size="16" letter-spacing="3">TẾT TRUNG THU · 25.09.2026</text>
+  <text x="84" y="360" fill="#f7d9e8" font-family="Georgia, serif" font-size="74">Đêm trăng</text>
+  <text x="84" y="438" fill="#f7d9e8" font-family="Georgia, serif" font-size="74">đoàn viên</text>
+  <text x="84" y="494" fill="#b8aec7" font-family="sans-serif" font-size="20">Một con đường nhỏ để mình cùng rước đèn,</text>
+  <text x="84" y="526" fill="#b8aec7" font-family="sans-serif" font-size="20">phá cỗ và gửi nhau một lời chúc dưới trăng.</text>
+  <rect x="84" y="584" width="236" height="60" rx="30" fill="#ecc2d8"/>
+  <text x="202" y="621" fill="#271322" font-family="sans-serif" font-size="17" text-anchor="middle" font-weight="700">Bắt đầu rước đèn</text>
+  <text x="84" y="700" fill="#bde3d8" font-family="monospace" font-size="14">01  RƯỚC ĐÈN</text>
+  <text x="300" y="700" fill="#7a6d88" font-family="monospace" font-size="14">02  PHÁ CỖ</text>
+  <text x="492" y="700" fill="#7a6d88" font-family="monospace" font-size="14">03  LỜI CHÚC</text>
+  <line x1="84" y1="728" x2="642" y2="728" stroke="#c9b7df" stroke-opacity=".25"/>
+</svg>

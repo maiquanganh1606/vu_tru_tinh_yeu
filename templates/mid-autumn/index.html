@@ -1,0 +1,73 @@
+<!doctype html>
+<!-- Isolated Mid-Autumn experience; no Universe runtime or sending APIs. -->
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100d20"><title>Đêm trăng đoàn viên · Hành trình lên cung trăng</title>
+<link rel="icon" href="data:,"><link rel="stylesheet" href="/static/mid-autumn/style.css?v=chapters-audio-1"><link rel="stylesheet" href="/static/mid-autumn/design-demo.css">
+</head>
+<body data-mode="home">
+<main id="stage" aria-label="Đêm trăng đoàn viên">
+ <div class="sky" aria-hidden="true"></div>
+ <div class="story-world" id="story-world" aria-hidden="true">
+  <img id="palace-art" class="story-backdrop" data-story-image src="/static/mid-autumn/assets/palace-desktop.webp" srcset="/static/mid-autumn/assets/palace-mobile.webp 960w, /static/mid-autumn/assets/palace-desktop.webp 1536w" sizes="100vw" alt="" decoding="async">
+  <div class="story-atmosphere"></div><div class="actor-shadow" id="lion-shadow"></div>
+  <div class="actor actor-cuoi" id="cuoi-art"><div id="cuoi-greeting"><img id="cuoi-image" class="" data-story-image src="/static/mid-autumn/assets/cuoi-desktop.webp" srcset="/static/mid-autumn/assets/cuoi-mobile.webp 640w, /static/mid-autumn/assets/cuoi-desktop.webp 1024w" sizes="(max-width:760px) 70vw, 55vw" alt="" decoding="async"></div></div>
+  <div class="actor actor-lion" id="lion-art"><svg viewBox="0 0 1000 800" aria-hidden="true" overflow="visible"><defs>
+<clipPath id="lion-head-clip"><path d="M0 0H675V240L640 290 580 330 580 488 539 638H0Z"/></clipPath>
+<clipPath id="lion-body-clip"><path d="M718 60H1254V640H585V530L595 440 605 400 620 360 615 320 640 280 665 240Z"/></clipPath></defs><g id="lion-leg-back-far" class="lion-joint"><svg x="570" y="396" width="255" height="370" viewBox="627 650 627 604" overflow="hidden" preserveAspectRatio="none"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" preserveAspectRatio="none"/></svg></g><g id="lion-leg-front-far" class="lion-joint"><svg x="365" y="382" width="255" height="382" viewBox="0 650 627 604" overflow="hidden" preserveAspectRatio="none"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" preserveAspectRatio="none"/></svg></g><g id="lion-leg-back" class="lion-joint"><svg x="704" y="420" width="285" height="385" viewBox="627 650 627 604" overflow="hidden" preserveAspectRatio="none"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" preserveAspectRatio="none"/></svg></g><g id="lion-body" class="lion-joint"><svg x="337" y="222" width="630" height="405" viewBox="575 55 679 565" overflow="visible" preserveAspectRatio="none"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" clip-path="url(#lion-body-clip)"/></svg></g><g id="lion-leg-front" class="lion-joint"><svg x="155" y="421" width="310" height="389" viewBox="0 650 627 604" overflow="hidden" preserveAspectRatio="none"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" preserveAspectRatio="none"/></svg></g><g id="lion-head" class="lion-joint"><svg x="0" y="0" width="590" height="630" viewBox="0 0 675 640" overflow="visible"><image href="/static/mid-autumn/assets/lion-puppet-v2-mobile.webp" width="1254" height="1254" clip-path="url(#lion-head-clip)"/></svg></g></svg></div>
+  <div class="actor actor-hang" id="hang-art"><div id="hang-arms"><img id="hang-image" class="" data-story-image src="/static/mid-autumn/assets/hang-desktop.webp" srcset="/static/mid-autumn/assets/hang-mobile.webp 640w, /static/mid-autumn/assets/hang-desktop.webp 1024w" sizes="(max-width:760px) 70vw, 55vw" alt="" decoding="async"><i id="hand-anchor"><i id="hand-light"></i></i></div></div>
+  <div class="story-mist" id="story-mist"></div><div class="story-mist near" id="story-mist-near"></div>
+ </div>
+ <canvas id="scene" aria-hidden="true"></canvas><div class="fallback-moon" id="fallback" hidden aria-hidden="true"></div>
+ <svg id="fallback-lantern" class="fallback-lantern" viewBox="-2 -2 4 4.4" hidden aria-hidden="true">
+  <defs><linearGradient id="rose-paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff2c1"/><stop offset=".5" stop-color="#f6ac83"/><stop offset="1" stop-color="#dc708c"/></linearGradient></defs>
+  <g class="fallback-wings" stroke="#f3c895" stroke-width=".022" stroke-linejoin="round">
+   <path data-wing="0" d="M0 0 .364 -.502 0 -1.5 -.364 -.502Z"/>
+   <path data-wing="1" d="M0 0 -.364 -.502 -1.427 -.464 -.590 .192Z"/>
+   <path data-wing="2" d="M0 0 -.590 .192 -.882 1.214 0 .620Z"/>
+   <path data-wing="3" d="M0 0 0 .620 .882 1.214 .590 .192Z"/>
+   <path data-wing="4" d="M0 0 .590 .192 1.427 -.464 .364 -.502Z"/>
+  </g>
+  <g fill="none" stroke-linecap="round"><path d="M-.882 1.25l-.04 .44m1.804 -.44l.04 .44" stroke="#f1ce95" stroke-width=".025"/><path d="M-.94 1.24l-.04 .38m1.92 -.38l.04 .38" stroke="#e999a4" stroke-width=".025"/></g>
+  <g fill="#633b42"><ellipse cx="-.22" cy="-.10" rx=".086" ry=".116"/><ellipse cx=".22" cy="-.10" rx=".086" ry=".116"/></g>
+  <g fill="#fff4da"><circle cx="-.245" cy="-.14" r=".022"/><circle cx=".195" cy="-.14" r=".022"/></g>
+  <g fill="#df6981" opacity=".6"><ellipse cx="-.37" cy=".09" rx=".115" ry=".043"/><ellipse cx=".37" cy=".09" rx=".115" ry=".043"/></g>
+  <path d="M-.085 .10q.085 .12 .17 0" fill="none" stroke="#713844" stroke-width=".025" stroke-linecap="round"/>
+  <g class="fallback-sparkles" fill="#ffedbd"><path data-wing="0" d="M0 -1.94l.025 .09 .07 .025 -.07 .025 -.025 .09 -.025 -.09 -.07 -.025 .07 -.025Z"/><path data-wing="1" d="M-1.72 -.62l.025 .09 .07 .025 -.07 .025 -.025 .09 -.025 -.09 -.07 -.025 .07 -.025Z"/><path data-wing="2" d="M-1.2 1.38l.025 .09 .07 .025 -.07 .025 -.025 .09 -.025 -.09 -.07 -.025 .07 -.025Z"/><path data-wing="3" d="M1.2 1.38l.025 .09 .07 .025 -.07 .025 -.025 .09 -.025 -.09 -.07 -.025 .07 -.025Z"/><path data-wing="4" d="M1.72 -.62l.025 .09 .07 .025 -.07 .025 -.025 .09 -.025 -.09 -.07 -.025 .07 -.025Z"/></g>
+ </svg>
+ <div class="veil" aria-hidden="true"></div><div class="horizon" aria-hidden="true"></div><div id="story-light" aria-hidden="true"></div><div id="fallback-letter" aria-hidden="true" hidden>✧</div>
+ <header class="topbar"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">✧</span><span>VŨ TRỤ TÌNH YÊU<small>MÙA TRĂNG CỦA CHÚNG MÌNH</small></span></a><a class="back" href="/"><span aria-hidden="true">↖</span> Về vũ trụ</a></header>
+ <span class="edition" aria-hidden="true">TRUNG THU · MÙA ĐOÀN VIÊN</span><p id="render-note" role="status" hidden></p><p id="asset-status" role="status" hidden></p><div id="loading-actions" hidden><button class="control" id="retry-assets">Thử tải lại</button><button class="control" id="continue-light">Tiếp tục với cảnh nhẹ</button></div>
+ <div class="letterbox top" aria-hidden="true"></div><div class="letterbox bottom" aria-hidden="true"></div>
+ <div id="film-meta" hidden>HÀNH TRÌNH LÊN CUNG TRĂNG<span id="film-scene-count"></span></div>
+ <section class="film" id="film" aria-label="Trải nghiệm cinematic" hidden><div class="film-caption" id="film-caption"><p class="eyebrow" id="film-kicker"></p><h2 id="film-title"></h2><p class="film-description" id="film-description"></p></div></section>
+ <div class="film-bar" id="film-bar" aria-hidden="true" hidden></div><p class="sr-only" id="announcement" aria-live="polite"></p>
+ <section class="view" id="home-view" aria-labelledby="home-title">
+  <p class="eyebrow">RẰM THÁNG TÁM · MỘT LỜI HẸN DƯỚI TRĂNG</p><h1 id="home-title" tabindex="-1">Đêm trăng<br><em>đoàn viên.</em></h1>
+  <p class="intro">Thắp một chiếc đèn, bước vào miền cổ tích.<br>Cung trăng có một cuộc hẹn dành cho mình.</p>
+  <button class="primary" id="begin">Mình cùng thắp đèn <span aria-hidden="true">↗</span></button><p class="micro">Thắp đèn · Lên cung trăng · Phá cỗ · Gửi ước nguyện</p>
+ </section>
+ <section class="view" id="lantern-view" aria-labelledby="lantern-title" hidden>
+  <p class="eyebrow">01 / THẮP ĐÈN ÔNG SAO</p><h2 id="lantern-title" tabindex="-1">Năm cánh sáng.<br><em>Một lối lên trăng.</em></h2>
+  <p class="intro">Chạm từng đốm sáng. Khi cả năm cánh sao sáng lên, chiếc đèn sẽ dẫn mình vào đêm hội trên cung trăng.</p>
+  <div class="stitches" role="group" aria-label="Thắp năm cánh đèn"><button class="stitch" aria-pressed="false" aria-label="Thắp cánh sao 1">01</button><button class="stitch" aria-pressed="false" aria-label="Thắp cánh sao 2">02</button><button class="stitch" aria-pressed="false" aria-label="Thắp cánh sao 3">03</button><button class="stitch" aria-pressed="false" aria-label="Thắp cánh sao 4">04</button><button class="stitch" aria-pressed="false" aria-label="Thắp cánh sao 5">05</button></div>
+  <p class="progress-copy" id="lantern-progress" aria-live="polite">0 / 5 cánh sao đã sáng</p><button class="text-button" id="light-all">Thắp cả chiếc đèn</button><button class="primary" id="enter-palace" hidden>Bước vào cung trăng <span aria-hidden="true">↗</span></button>
+ </section>
+ <section class="view" id="feast-view" aria-labelledby="feast-title" hidden><div class="feast-layout">
+  <div><p class="eyebrow">02 / PHÁ CỖ DƯỚI TRĂNG</p><h2 id="feast-title" tabindex="-1">Đêm còn dài.<br><em>Mình ngồi lại nhé.</em></h2><p class="intro">Sau tiếng trống hội, dành nhau một chút bình yên. Chọn một vị bánh để cùng phá cỗ.</p></div>
+  <div class="feast-card"><p class="eyebrow">MÂM CỖ CỦA CHÚNG MÌNH</p><div class="cake-options" role="group" aria-label="Chọn bánh"><button class="cake-option" aria-pressed="true" data-cake="nướng"><span class="cake" aria-hidden="true"></span>Bánh nướng</button><button class="cake-option" aria-pressed="false" data-cake="dẻo"><span class="cake snow" aria-hidden="true"></span>Bánh dẻo</button></div><p class="intro" id="cake-caption">Một miếng bánh thơm, một khoảng trời yên.</p><button class="primary" id="to-wish">Gửi một ước nguyện <span aria-hidden="true">↗</span></button></div>
+ </div></section>
+ <section class="view" id="wish-view" aria-labelledby="wish-title" hidden><div class="feast-layout">
+  <div><p class="eyebrow">03 / GỬI ƯỚC NGUYỆN LÊN CUNG TRĂNG</p><h2 id="wish-title" tabindex="-1">Có một điều,<br><em>mình gửi cho trăng.</em></h2><p class="intro">Viết điều bạn đang mong. Một cánh thư sẽ mang ước nguyện bay lên cung trăng, nơi Chị Hằng và Chú Cuội đang chờ.</p></div>
+  <form class="feast-card wish-paper" id="wish-form"><label for="wish">ƯỚC NGUYỆN CỦA BẠN</label><textarea id="wish" required placeholder="Mong những mùa trăng sau, mình vẫn có nhau…" aria-describedby="wish-error wish-privacy"></textarea><span class="wish-counter" id="wish-counter">0 / 240</span><p class="wish-error" id="wish-error" role="alert"></p><button class="primary" id="send-wish" type="submit">Gửi ước nguyện lên cung trăng <span aria-hidden="true">✧</span></button><p class="feast-note" id="wish-privacy">Ước nguyện chỉ ở trong trải nghiệm này, không được lưu hoặc gửi cho người khác.</p></form>
+ </div></section>
+ <section class="view" id="ending-view" aria-labelledby="ending-title" hidden>
+  <p class="eyebrow">ƯỚC NGUYỆN ĐÃ ĐẾN CUNG TRĂNG</p><h2 id="ending-title" tabindex="-1">Trăng giữ điều ước.<br><em>Mình giữ nhau.</em></h2><blockquote class="ending-quote" id="ending-wish"></blockquote><p class="intro">Chị Hằng đã đón lấy cánh thư.<br>Cuội giữ lời hẹn dưới tán đa.<br>Hẹn mình ở một mùa trăng sau.</p><div class="ending-actions"><a class="primary" href="/">Khép lại đêm trăng <span aria-hidden="true">↗</span></a><button class="text-button" id="restart">Bắt đầu lại hành trình</button></div>
+ </section>
+ <footer class="chapter-rail"><nav class="chapters" aria-label="Hành trình Trung Thu"><button class="chapter" data-view="home" aria-current="step">Khởi đầu</button><button class="chapter" data-view="lantern">Thắp đèn</button><button class="chapter" data-view="journey" disabled>Lên cung trăng</button><button class="chapter" data-view="feast" disabled>Phá cỗ</button><button class="chapter" data-view="wish" disabled>Ước nguyện</button></nav><div class="controls"><span class="preview-tag">ĐÊM TRĂNG ĐOÀN VIÊN · 2.1</span><button class="control" id="sound" aria-pressed="true">Âm thanh: Bật · chờ chạm</button><button class="control" id="pause" hidden>Tạm dừng</button><button class="control" id="next-scene" hidden>Cảnh tiếp theo ↗</button><button class="control" id="skip" hidden>Bỏ qua</button><button class="control" id="replay" hidden>↺ Xem lại cinematic</button></div></footer>
+</main>
+<script src="/static/vendor/three-r128.min.js"></script><script type="module" src="/static/mid-autumn/app.js?v=chapters-audio-4"></script>
+<script type="module" src="/static/mid-autumn/design-demo.js?v=moon-star-demo-1"></script>
+</body>
+</html>

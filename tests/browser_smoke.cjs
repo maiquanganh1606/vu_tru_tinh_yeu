@@ -4,7 +4,7 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { chromium } = require('playwright');
 
-const fileURL = pathToFileURL(path.resolve(__dirname, '../200 days/200 days (frontend).html')).href;
+const fileURL = pathToFileURL(path.resolve(__dirname, '../templates/index.html')).href;
 const urls = process.env.LOVE_TEST_URL ? [process.env.LOVE_TEST_URL] : [fileURL, 'http://127.0.0.1:5001/'];
 
 (async () => {

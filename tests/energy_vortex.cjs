@@ -123,7 +123,7 @@ function shape(s){const b=bounds(s),aspect=(b.bottom-b.top)/(b.right-b.left);ass
   console.log('PASS reduced motion: clocks and rendered pixels remain static');
   const disabled=await browser.newPage();
   await disabled.goto(url);await disabled.evaluate(()=>Universe.config.features.energyVortex=false);await disabled.locator('#intro-skip-btn').click();await mode(disabled,'EXPLORE');assert.equal(await state(disabled),null);await disabled.close();
-  const file=await browser.newPage();await enter(file,pathToFileURL(path.resolve('200 days/200 days (frontend).html')).href);assert((await state(file)).count>0);await file.close();
+  const file=await browser.newPage();await enter(file,pathToFileURL(path.resolve('templates/index.html')).href);assert((await state(file)).count>0);await file.close();
   console.log('PASS feature flag off and file preview');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

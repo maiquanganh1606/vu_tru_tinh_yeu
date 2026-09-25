@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {chromium}=require('playwright');
-const url=process.env.LOVE_TEST_URL||pathToFileURL(path.resolve(__dirname,'../200 days/200 days (frontend).html')).href;
+const url=process.env.LOVE_TEST_URL||pathToFileURL(path.resolve(__dirname,'../templates/index.html')).href;
 
 async function geometry(page){
  return page.evaluate(()=>{

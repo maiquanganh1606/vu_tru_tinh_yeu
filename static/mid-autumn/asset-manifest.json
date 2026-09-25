@@ -1,0 +1,52 @@
+{
+  "version": "2.1",
+  "handAnchor": {
+    "art": "hang-v1",
+    "sourceWidth": 1024,
+    "sourceHeight": 1536,
+    "x": 260,
+    "y": 520
+  },
+  "assets": [
+    {
+      "file": "cuoi-desktop.webp",
+      "bytes": 277412,
+      "sha256": "62b63bf86751f67fa6343bd454e444d220d9299fefa96fab050965808a93fcac"
+    },
+    {
+      "file": "cuoi-mobile.webp",
+      "bytes": 145062,
+      "sha256": "98c6f86fa9056c64f0abb4f28311d60d8fa1c2e1ba983b6a3f9472d0ded15a4e"
+    },
+    {
+      "file": "hang-desktop.webp",
+      "bytes": 295266,
+      "sha256": "6e0e9a686cb0a9fb38f5d5a3b4dc6174f63c59589f82e1dc93ca75d11cc156e1"
+    },
+    {
+      "file": "hang-mobile.webp",
+      "bytes": 165232,
+      "sha256": "f4ec311ac1d7e2303e30a43d3d9a2136d4786c7633395f119deb81b382edecca"
+    },
+    {
+      "file": "lion-puppet-v2-desktop.webp",
+      "bytes": 337094,
+      "sha256": "cf7519771eaafd6101195e15f9a2d6897a7ae3cf7713c4c41cd36b39b6d6aeeb"
+    },
+    {
+      "file": "lion-puppet-v2-mobile.webp",
+      "bytes": 223010,
+      "sha256": "c9a502b94ecbcb2dd55786a36b84666f6ab14cf60ab9645512a9f4ddad446d59"
+    },
+    {
+      "file": "palace-desktop.webp",
+      "bytes": 254482,
+      "sha256": "b0fd488b7b86e7dbd22f23f20522daa08bf5bb5f3e42d0d3ae84ba68c70a839e"
+    },
+    {
+      "file": "palace-mobile.webp",
+      "bytes": 121886,
+      "sha256": "1c705809c9d822058c88c3e93ca9779c2493d661afbea3dc9cdfde1467cea89a"
+    }
+  ]
+}

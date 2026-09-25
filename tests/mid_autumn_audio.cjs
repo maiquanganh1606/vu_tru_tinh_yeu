@@ -1,0 +1,11 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+const url=new URL('/trung-thu/?inspect',process.env.LOVE_TEST_URL||'http://127.0.0.1:5002/').href;
+(async()=>{for(const allowed of [false,true]){const browser=await chromium.launch({channel:'chrome',headless:true,args:[...(allowed?[]:['--disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies']),`--autoplay-policy=${allowed?'no-user-gesture-required':'document-user-activation-required'}`]});try{
+ const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{window.__startedTones=0;const start=OscillatorNode.prototype.start;OscillatorNode.prototype.start=function(...args){window.__startedTones++;return start.apply(this,args);};});await page.goto(url);await page.waitForFunction(()=>window.__midAutumn);
+ if(allowed){await page.waitForFunction(()=>window.__midAutumn.state().audio.state==='running');await page.waitForFunction(()=>window.__startedTones>0);}
+ else{assert.equal(await page.evaluate(()=>window.__midAutumn.state().audio.state),'suspended');await page.locator('#begin').click();await page.waitForFunction(()=>window.__midAutumn.state().audio.state==='running');}
+ assert.equal(await page.locator('#sound').textContent(),'Âm thanh: Bật');await page.locator('#sound').click();assert.equal(await page.locator('#sound').textContent(),'Âm thanh: Tắt');await page.locator('.chapter[data-view=home]').click();assert.equal(await page.evaluate(()=>window.__midAutumn.state().audio.enabled),false);await page.locator('#sound').click();await page.waitForFunction(()=>window.__midAutumn.state().audio.state==='running');assert.equal(await page.evaluate(()=>window.__midAutumn.state().audio.enabled),true);
+ assert.deepEqual(errors,[]);await page.close();
+ if(!allowed){const p=await browser.newPage();await p.goto(url);await p.waitForFunction(()=>window.__midAutumn);await p.locator('#sound').click();await p.locator('#begin').click();await p.waitForTimeout(200);assert.equal(await p.evaluate(()=>window.__midAutumn.state().audio.enabled),false);await p.close();}
+ console.log(`PASS autoplay ${allowed?'allowed: plays immediately':'blocked: first gesture unlocks; mute wins'}, manual mute/unmute`);
+}finally{await browser.close();}}})().catch(e=>{console.error(e);process.exitCode=1});

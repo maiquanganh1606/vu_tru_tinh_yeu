@@ -1,0 +1,41 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');
+const base=process.env.LOVE_TEST_URL||'http://127.0.0.1:5002/';
+(async()=>{const browser=await chromium.launch({channel:'chrome',headless:true,args:['--autoplay-policy=no-user-gesture-required']});try{
+ const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(new URL('/trung-thu/?inspect',base).href);
+ await page.evaluate(async()=>{const {createAudio}=await import('/static/mid-autumn/audio.js?v=music-cues-3');window.testMusic=createAudio();await testMusic.start();});
+ const state=()=>page.evaluate(()=>testMusic.inspect());
+ const cue=async(mode,time=0,reduced=false,restart=false)=>{await page.evaluate(a=>testMusic.setScene(...a),[mode,time,reduced,restart]);await page.waitForFunction(expected=>testMusic.inspect().music.loadedCue===expected&&testMusic.hasMusic(),reduced?'ambient':mode);};
+ await page.waitForFunction(()=>testMusic.hasMusic());
+ // Let the real ambient cue reach its first overlapped loop, checking bounded source count.
+ await page.waitForTimeout(15100);assert.equal((await state()).music.cue,'ambient');assert.equal((await state()).music.playing,true);assert.ok((await state()).music.voices<=2);
+ await cue('journey',0,false,true);assert.ok(Math.abs((await state()).music.sourcePosition-15.23)<.25);
+ await page.waitForTimeout(400);await cue('journey',0,false,true);assert.ok(Math.abs((await state()).music.sourcePosition-15.23)<.25);
+ await cue('journey',21);await page.waitForFunction(()=>Math.abs(testMusic.inspect().music.sourcePosition-36.23)<.25);
+ const gain=(await state()).music.level;assert.ok(Math.abs(gain/.52-10**(-3/20))<.001);
+ await page.evaluate(()=>testMusic.drum());assert.equal((await state()).music.ducked,true);
+ await page.evaluate(()=>testMusic.suspend());const paused=(await state()).music.position;await page.waitForTimeout(250);assert.equal((await state()).music.position,paused);assert.equal((await state()).music.playing,false);
+ await page.evaluate(()=>testMusic.resume());await page.waitForFunction(()=>testMusic.inspect().music.playing);
+ await page.evaluate(()=>testMusic.toggle());assert.equal((await state()).music.playing,false);await page.evaluate(()=>testMusic.toggle());
+ await cue('outro',22,false,true);await page.waitForFunction(()=>Math.abs(testMusic.inspect().music.sourcePosition-150.63)<.3);
+ const before=(await state()).music.position;await page.evaluate(()=>testMusic.setScene('ending'));const tail=await state();assert.ok(Math.abs(tail.music.position-before)<.2);assert.equal(tail.music.ending,true);assert.equal(tail.music.playing,true);
+ await page.waitForFunction(()=>!testMusic.inspect().music.playing,{},{timeout:9000});
+ await cue('outro',0,false,true);assert.ok(Math.abs((await state()).music.sourcePosition-128.63)<.25);
+ await cue('outro',15,true);assert.equal((await state()).music.cue,'ambient');
+ await page.evaluate(()=>testMusic.setScene('ending',0,true));await page.waitForTimeout(1000);assert.equal((await state()).music.playing,false);
+ await page.evaluate(()=>testMusic.dispose());assert.equal((await state()).music.voices,0);
+ assert.deepEqual(errors,[]);
+ // A failed or late cue must never resurrect an old soundtrack after navigation.
+ await page.route('**/outro.web.mp3',route=>route.fulfill({status:404,body:'missing'}));
+ await page.evaluate(async()=>{const {createAudio}=await import('/static/mid-autumn/audio.js?v=music-cues-3');window.testMusic=createAudio();await testMusic.start();testMusic.setScene('outro',0);});
+ await page.waitForFunction(()=>testMusic.inspect().music.failed);assert.equal((await state()).music.playing,false);
+ await cue('journey',0,false,true);await page.evaluate(()=>testMusic.dispose());
+ const reducedPage=await browser.newPage({reducedMotion:'reduce'});
+ await reducedPage.addInitScript(()=>{window.receivedChimes=0;const start=OscillatorNode.prototype.start;OscillatorNode.prototype.start=function(...a){window.receivedChimes++;return start.apply(this,a);};});
+ await reducedPage.goto(new URL('/trung-thu/?inspect',base).href);await reducedPage.waitForFunction(()=>window.__midAutumn?.state().assetsReady);
+ await reducedPage.locator('#begin').click();await reducedPage.locator('#light-all').click();for(let i=0;i<6;i++)await reducedPage.locator('#next-scene').click();
+ await reducedPage.locator('#to-wish').click();await reducedPage.locator('#wish').fill('Bình an');await reducedPage.locator('#send-wish').click();
+ const count=await reducedPage.evaluate(()=>window.receivedChimes);await reducedPage.locator('#next-scene').click();await reducedPage.locator('#next-scene').click();
+ assert.equal(await reducedPage.evaluate(()=>window.receivedChimes),count+1);assert.equal(await reducedPage.evaluate(()=>window.__midAutumn.state().audio.music.cue),'ambient');await reducedPage.close();
+ console.log('PASS real cues, ambient loop, replay reset, fixed seek, gain/ducking, pause clock, mute, natural outro tail, reduced motion, failed cue fallback, disposal');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

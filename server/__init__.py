@@ -8,7 +8,7 @@ import time
 import uuid
 from pathlib import Path
 from urllib.parse import urlsplit
-from flask import Flask, Response, jsonify, render_template, request, session
+from flask import Flask, Response, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 from image_catalog import catalog_script, universe_data
 from .db import connect, initialize
@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def create_app(overrides=None):
     instance = Path(os.environ.get('LOVE_INSTANCE_PATH', str(ROOT / 'instance'))).resolve()
-    app = Flask(__name__, template_folder=str(ROOT / '200 days'), static_folder=str(ROOT / 'static'), instance_path=str(instance))
+    app = Flask(__name__, template_folder=str(ROOT / 'templates'), static_folder=str(ROOT / 'static'), instance_path=str(instance))
     app.config.update(
         DATABASE=str(instance / 'universe.sqlite3'), CAPSULE_FILE=str(instance / 'capsule.json'),
         SECRET_KEY=os.environ.get('LOVE_SECRET_KEY'), MAX_CONTENT_LENGTH=16 * 1024,
@@ -116,7 +116,15 @@ def create_app(overrides=None):
 
     @app.get('/')
     def home():
-        return render_template('200 days (frontend).html')
+        return render_template('index.html')
+
+    @app.get('/trung-thu-2026/')
+    def mid_autumn_legacy():
+        return redirect(url_for('mid_autumn'), code=301)
+
+    @app.get('/trung-thu/')
+    def mid_autumn():
+        return render_template('mid-autumn/index.html')
 
     @app.get('/static/memories.js')
     def memories():

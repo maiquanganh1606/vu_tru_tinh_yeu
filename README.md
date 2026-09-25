@@ -10,7 +10,7 @@ Big Update 2.0 gồm hành tinh ký ức, chòm sao, Heart Focus, bệ năng lư
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python 200.py
+python app.py
 ```
 
 Mở http://127.0.0.1:5001/. Chạy qua HTTP để ảnh WebGL tải đúng; trình duyệt có thể chặn texture khi mở trực tiếp file HTML. Three.js được phục vụ tại chỗ, font có thể tải từ CDN. Khi Three.js không khả dụng, các nút vào trang vẫn hoạt động và intro tự bỏ qua sau 30 giây.
@@ -47,7 +47,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python scripts/build_thumbnails.py
-python 200.py
+python app.py
 ```
 
 Mở `http://127.0.0.1:5001/`. Three.js r128 được phục vụ từ `static/vendor/` (giấy phép MIT đi kèm); không cần CDN để chạy cảnh. Fonts vẫn có font hệ thống dự phòng. `static/love_song.web.mp3` là bản 128 kbps phục vụ trên web; bản gốc còn nguyên. `static/thumbnails/` chứa ảnh xem trước; ảnh lớn tải bản gốc khi mở.
@@ -108,7 +108,7 @@ Một request gửi lại cùng khóa chỉ tạo một bản ghi. Nếu nhà cu
 ### Chạy production và dữ liệu
 
 ```sh
-gunicorn --bind 127.0.0.1:8000 --workers 2 '200:app'
+gunicorn --bind 127.0.0.1:8000 --workers 2 'app:app'
 ```
 
 Dùng reverse proxy HTTPS và đặt `LOVE_HTTPS=1`. Nếu có đúng một reverse proxy đáng tin cậy kết thúc TLS, đặt `LOVE_TRUSTED_PROXY_HOPS=1`, chuyển tiếp Host gốc và giữ Gunicorn chỉ nghe trên localhost. Mặc định là 0 để không tin các header forwarded từ client; số hop phải khớp hạ tầng thực tế. App kiểm tra origin + CSRF cho POST. Không bật `FLASK_DEBUG` ở production.
@@ -143,3 +143,24 @@ Các script browser cần package `playwright`, Node.js và Chrome như phần k
 `puzzle-layout.cjs` mặc định mở trực tiếp file HTML; đặt `LOVE_TEST_URL` để kiểm tra bản HTTP. Kiểm tra này bao phủ ảnh dọc/ngang, màn hình nhỏ/ngang, đổi kích thước và một vùng cuộn chung luôn giữ trọn bàn xếp hình.
 
 Xem `docs/IMPLEMENTATION_V2.md` cho phạm vi đã triển khai, nội dung còn cần điền và giới hạn vận hành.
+
+## Cấu trúc ứng dụng
+
+- `app.py`: khởi chạy Flask; production dùng `app:app`.
+- `templates/index.html`: giao diện Vũ trụ tình yêu.
+- `templates/mid-autumn/index.html`: trải nghiệm Trung Thu dùng lại mỗi năm tại `/trung-thu/`.
+- Đường dẫn Trung Thu cũ có năm được chuyển hướng 301 về `/trung-thu/`.
+
+## Trung Thu v2.1
+
+Trang `/trung-thu/` là trải nghiệm riêng trong cùng Flask app, mở qua liên kết “Đêm trăng đoàn viên” trên trang chính. Thắp 5/5 → cinematic cung trăng → phá cỗ → ước nguyện → outro. Không lưu/gửi ước nguyện qua API. Xem [ghi chú triển khai](docs/MID_AUTUMN_V2_1_RELEASE_NOTES.md).
+
+```sh
+LOVE_TEST_URL=http://127.0.0.1:5001/ node tests/mid_autumn_alignment.cjs
+LOVE_TEST_URL=http://127.0.0.1:5001/ node tests/mid_autumn_flow.cjs
+LOVE_TEST_URL=http://127.0.0.1:5001/ node tests/mid_autumn_lifecycle.cjs
+LOVE_TEST_URL=http://127.0.0.1:5001/ node tests/mid_autumn_navigation.cjs
+LOVE_TEST_URL=http://127.0.0.1:5001/ node tests/mid_autumn_audio.cjs
+```
+
+Các script cần Node/Playwright như bộ test hiện có. Kiểm tra iPhone/Android thật còn chờ; không coi giả lập mobile là nghiệm thu hiệu năng thiết bị.
